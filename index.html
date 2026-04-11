@@ -117,7 +117,7 @@ border-radius:6px;cursor:pointer
 
 <div class="card">
 
-<!-- FORM (เหมือนเดิม 100%) -->
+<!-- FORM -->
 <div id="form" class="sec active">
 <div class="form-grid">
 
@@ -162,9 +162,8 @@ border-radius:6px;cursor:pointer
 <button class="btn" onclick="save()">บันทึก</button>
 </div>
 
-<!-- 🔥 HISTORY (17 COLUMN) -->
+<!-- HISTORY -->
 <div id="history" class="sec">
-
 <button class="export" onclick="exportCSV()">Export CSV</button>
 
 <table>
@@ -191,7 +190,6 @@ border-radius:6px;cursor:pointer
 </thead>
 <tbody id="tb"></tbody>
 </table>
-
 </div>
 
 <!-- JSON -->
@@ -204,6 +202,9 @@ border-radius:6px;cursor:pointer
 </div>
 
 <script>
+
+/* 🔴 CHANGE THIS */
+const API_URL = "https://script.google.com/macros/s/AKfycbzAFx3ZDmlHYtGfEkbbR-RGdCOYkgpV1s_uD77LYZ9_qddlKkJAU0Mz-zKuX5yS04nYsA/exec";
 
 let data=[];
 let MACHINES=[];
@@ -229,10 +230,12 @@ const dd=dropdown;
 if(val.length<1){dd.style.display="none";return;}
 const q=val.toLowerCase();
 const res=MACHINES.filter(m=>m.name.toLowerCase().includes(q)||m.code.includes(q));
+
 dd.innerHTML=res.map(m=>`
 <div onclick="selectMachine('${m.name}','${m.code}')">
 ${m.name}<br><small>${m.code}</small>
 </div>`).join('');
+
 dd.style.display="block";
 }
 
@@ -269,25 +272,70 @@ arr.push({code:i[0].value,name:i[1].value,qty:i[2].value});
 return arr;
 }
 
-/* SAVE */
+/* =======================
+   SAVE TO GOOGLE SHEET
+======================= */
 function save(){
-data.unshift({
-code:machineCode.value,
-name:machineName.value,
-date:date.value,
-sym:sym.value,
-tstop:tstop.value,
-tstart:tstart.value,
-tfin:tfin.value,
-req:req.value,
-acc:acc.value,
-cause:cause.value,
-act:act.value,
-deliver:deliver.value,
-owner:owner.value,
-parts:hasPart.checked?getParts():[]
+
+const payload = {
+code: machineCode.value,
+name: machineName.value,
+date: date.value,
+sym: sym.value,
+tstop: tstop.value,
+tstart: tstart.value,
+tfin: tfin.value,
+req: req.value,
+acc: acc.value,
+cause: cause.value,
+act: act.value,
+deliver: deliver.value,
+owner: owner.value,
+parts: hasPart.checked ? getParts() : []
+};
+
+fetch(API_URL,{
+method:"POST",
+body:JSON.stringify(payload)
+})
+.then(r=>r.text())
+.then(()=>{
+alert("บันทึกลง Google Sheet แล้ว");
+loadData();
 });
-alert("บันทึกแล้ว");
+
+}
+
+/* =======================
+   LOAD FROM SHEET
+======================= */
+function loadData(){
+
+fetch(API_URL)
+.then(r=>r.json())
+.then(json=>{
+
+data = json.slice(1).map(r=>({
+code:r[1],
+name:r[2],
+date:r[3],
+sym:r[4],
+tstop:r[5],
+tstart:r[6],
+tfin:r[7],
+req:r[8],
+acc:r[9],
+cause:r[10],
+act:r[11],
+deliver:r[12],
+owner:r[13],
+parts:[]
+}));
+
+render();
+
+});
+
 }
 
 /* RENDER */
@@ -307,15 +355,16 @@ tb.innerHTML=data.map((d,i)=>`
 <td>${d.tfin}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
-<td>${d.parts.map(p=>p.code).join('<br>')}</td>
-<td>${d.parts.map(p=>p.name).join('<br>')}</td>
-<td>${d.parts.map(p=>p.qty).join('<br>')}</td>
+
+<td>${d.parts?.map(p=>p.code).join('<br>')||''}</td>
+<td>${d.parts?.map(p=>p.name).join('<br>')||''}</td>
+<td>${d.parts?.map(p=>p.qty).join('<br>')||''}</td>
+
 <td><button class="small-btn del" onclick="del(${i})">ลบ</button></td>
 </tr>
 `).join('');
 }
 
-/* DELETE */
 function del(i){
 data.splice(i,1);
 render();
@@ -323,12 +372,10 @@ render();
 
 /* EXPORT */
 function exportCSV(){
-let csv="Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,Finish,Deliver,Owner,PartCode,PartName,QTY\n";
+let csv="Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,Finish,Deliver,Owner\n";
 
 data.forEach(d=>{
-d.parts.forEach(p=>{
-csv+=`${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner},${p.code},${p.name},${p.qty}\n`;
-});
+csv+=`${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner}\n`;
 });
 
 let blob=new Blob([csv]);
@@ -337,6 +384,9 @@ a.href=URL.createObjectURL(blob);
 a.download="maintenance.csv";
 a.click();
 }
+
+/* INIT */
+loadData();
 
 </script>
 
