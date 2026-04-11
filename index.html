@@ -1,10 +1,212 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maintenance App</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
+body{background:#f4f6fb}
+
+.container{max-width:1000px;margin:auto;padding:12px}
+
+.header{
+position:sticky;top:0;z-index:99;
+background:#ffffffcc;backdrop-filter:blur(10px);
+padding:10px;border-radius:12px;
+box-shadow:0 3px 10px rgba(0,0,0,0.05)
+}
+
+.title{font-size:18px;font-weight:700}
+.sub{font-size:12px;color:#777}
+
+.tab-bar{display:flex;gap:6px;margin-top:10px}
+.tab{
+flex:1;padding:8px;border:none;border-radius:8px;
+background:#eef1f7;font-size:12px;cursor:pointer
+}
+.tab.active{background:#4f46e5;color:#fff}
+
+.card{
+background:#fff;border-radius:12px;
+padding:12px;margin-top:10px;
+box-shadow:0 3px 12px rgba(0,0,0,0.05)
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:8px
+}
+.fg{display:flex;flex-direction:column}
+.fg.full{grid-column:1/-1}
+
+label{font-size:11px;margin-bottom:2px;color:#555}
+input,textarea{
+padding:7px;
+border-radius:6px;
+border:1px solid #ddd;
+font-size:12px;
+background:#fafbff
+}
+textarea{min-height:50px}
+
+.dd{
+position:absolute;background:#fff;border:1px solid #ccc;
+width:100%;max-height:120px;overflow:auto;display:none;z-index:10
+}
+.dd div{padding:6px;font-size:12px;cursor:pointer}
+.dd div:hover{background:#eee}
+
+.parts-box{
+background:#f8faff;border:1px dashed #ccc;
+padding:8px;border-radius:8px;margin-top:5px;display:none
+}
+.part-row{
+display:grid;
+grid-template-columns:1fr 1fr 60px 30px;
+gap:5px;margin-top:5px
+}
+
+table{width:100%;border-collapse:collapse;font-size:11px}
+th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
+
+.btn{
+margin-top:10px;
+padding:10px;
+background:#4f46e5;
+color:#fff;
+border:none;
+border-radius:8px;
+cursor:pointer;
+width:100%;
+font-size:13px
+}
+
+.small-btn{
+padding:4px 6px;font-size:10px;border:none;
+border-radius:6px;cursor:pointer
+}
+.del{background:#ef4444;color:#fff}
+.export{background:#10b981;color:#fff;margin-bottom:8px}
+
+.sec{display:none}
+.sec.active{display:block}
+
+@media(max-width:600px){
+.form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">
+<div class="title">Maintenance App</div>
+<div class="sub">Factory Utility System</div>
+
+<div class="tab-bar">
+<button class="tab active" onclick="switchTab('form',this)">Form</button>
+<button class="tab" onclick="switchTab('history',this)">History</button>
+<button class="tab" onclick="switchTab('json',this)">Machine JSON</button>
+</div>
+</div>
+
+<div class="card">
+
+<!-- FORM (เหมือนเดิม 100%) -->
+<div id="form" class="sec active">
+<div class="form-grid">
+
+<div class="fg full">
+<label>ค้นหาเครื่องจักร</label>
+<div style="position:relative">
+<input id="machineInput" oninput="searchMachine(this.value)">
+<div id="dropdown" class="dd"></div>
+</div>
+</div>
+
+<div class="fg"><label>รหัสเครื่อง</label><input id="machineCode"></div>
+<div class="fg"><label>ชื่อเครื่องจักร</label><input id="machineName"></div>
+
+<div class="fg"><label>วันที่</label><input id="date" type="date"></div>
+<div class="fg"><label>เวลาหยุด</label><input id="tstop" type="time"></div>
+<div class="fg"><label>เริ่มซ่อม</label><input id="tstart" type="time"></div>
+<div class="fg"><label>เสร็จ</label><input id="tfin" type="time"></div>
+
+<div class="fg full"><label>อาการ</label><textarea id="sym"></textarea></div>
+
+<div class="fg"><label>ผู้แจ้ง</label><input id="req"></div>
+<div class="fg"><label>ผู้รับแจ้ง</label><input id="acc"></div>
+
+<div class="fg full"><label>สาเหตุ</label><textarea id="cause"></textarea></div>
+<div class="fg full"><label>การแก้ไข</label><textarea id="act"></textarea></div>
+
+<div class="fg"><label>ผู้ส่ง</label><input id="deliver"></div>
+<div class="fg"><label>ผู้รับ</label><input id="owner"></div>
+
+<div class="fg full">
+<label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีอะไหล่</label>
+</div>
+
+<div id="partsBox" class="parts-box full">
+<div id="parts"></div>
+<button type="button" onclick="addPart()">+ เพิ่มอะไหล่</button>
+</div>
+
+</div>
+
+<button class="btn" onclick="save()">บันทึก</button>
+</div>
+
+<!-- 🔥 HISTORY (17 COLUMN) -->
+<div id="history" class="sec">
+
+<button class="export" onclick="exportCSV()">Export CSV</button>
+
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Name</th>
+<th>Date</th>
+<th>Symptom</th>
+<th>Stop</th>
+<th>Start</th>
+<th>Req</th>
+<th>Acc</th>
+<th>Cause</th>
+<th>Action</th>
+<th>Finish</th>
+<th>Deliver</th>
+<th>Owner</th>
+<th>Part Code</th>
+<th>Part Name</th>
+<th>QTY</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="tb"></tbody>
+</table>
+
+</div>
+
+<!-- JSON -->
+<div id="json" class="sec">
+<textarea id="jsonBox" style="width:100%;height:200px"></textarea>
+<button class="btn" onclick="loadJSON()">โหลด Machine JSON</button>
+</div>
+
+</div>
+</div>
+
 <script>
 
-const API_URL = "PUT_YOUR_GOOGLE_SCRIPT_URL_HERE";
-
-let data = [];
-let MACHINES = [];
-let PERSON = [];
+let data=[];
+let MACHINES=[];
 
 /* TAB */
 function switchTab(t,el){
@@ -17,27 +219,20 @@ if(t==='history') render();
 
 /* JSON */
 function loadJSON(){
-try{MACHINES=JSON.parse(jsonBox.value);alert("Machine OK")}
+try{MACHINES=JSON.parse(jsonBox.value);alert("OK")}
 catch{alert("JSON ผิด")}
 }
 
-function loadPerson(){
-try{PERSON=JSON.parse(personBox.value);alert("Person OK")}
-catch{alert("JSON ผิด")}
-}
-
-/* MACHINE SEARCH */
+/* SEARCH */
 function searchMachine(val){
 const dd=dropdown;
 if(val.length<1){dd.style.display="none";return;}
 const q=val.toLowerCase();
 const res=MACHINES.filter(m=>m.name.toLowerCase().includes(q)||m.code.includes(q));
-
 dd.innerHTML=res.map(m=>`
 <div onclick="selectMachine('${m.name}','${m.code}')">
 ${m.name}<br><small>${m.code}</small>
 </div>`).join('');
-
 dd.style.display="block";
 }
 
@@ -47,36 +242,6 @@ machineCode.value=c;
 machineName.value=n;
 dropdown.style.display="none";
 }
-
-/* PERSON SEARCH */
-function searchPerson(input){
-const dd=input.nextElementSibling;
-const q=input.value.toLowerCase();
-
-if(q.length<1){dd.style.display="none";return;}
-
-const res=PERSON.filter(p=>p.toLowerCase().includes(q));
-
-dd.innerHTML=res.map(p=>`
-<div onclick="selectPerson('${p}',this)">${p}</div>
-`).join('');
-
-dd.style.display="block";
-}
-
-function selectPerson(val,el){
-el.parentElement.previousElementSibling.value=val;
-el.parentElement.style.display="none";
-}
-
-/* CLICK OUTSIDE */
-document.addEventListener("click",e=>{
-document.querySelectorAll(".dd").forEach(d=>{
-if(!d.parentElement.contains(e.target)){
-d.style.display="none";
-}
-});
-});
 
 /* PART */
 function togglePart(){
@@ -99,84 +264,35 @@ function getParts(){
 let arr=[];
 document.querySelectorAll(".part-row").forEach(r=>{
 const i=r.querySelectorAll("input");
-arr.push({
-code:i[0].value,
-name:i[1].value,
-qty:i[2].value
-});
+arr.push({code:i[0].value,name:i[1].value,qty:i[2].value});
 });
 return arr;
 }
 
-/* =========================
-   🔴 SAVE TO GOOGLE SHEET
-========================= */
+/* SAVE */
 function save(){
-
-const payload = {
-code: machineCode.value,
-name: machineName.value,
-date: date.value,
-sym: sym.value,
-tstop: tstop.value,
-tstart: tstart.value,
-tfin: tfin.value,
-req: req.value,
-acc: acc.value,
-cause: cause.value,
-act: act.value,
-deliver: deliver.value,
-owner: owner.value,
-parts: hasPart.checked ? getParts() : []
-};
-
-fetch(API_URL, {
-method: "POST",
-body: JSON.stringify(payload)
-})
-.then(r => r.text())
-.then(() => {
-alert("บันทึกลง Google Sheet แล้ว");
-loadData();
+data.unshift({
+code:machineCode.value,
+name:machineName.value,
+date:date.value,
+sym:sym.value,
+tstop:tstop.value,
+tstart:tstart.value,
+tfin:tfin.value,
+req:req.value,
+acc:acc.value,
+cause:cause.value,
+act:act.value,
+deliver:deliver.value,
+owner:owner.value,
+parts:hasPart.checked?getParts():[]
 });
-
-}
-
-/* =========================
-   🔵 LOAD FROM GOOGLE SHEET
-========================= */
-function loadData(){
-
-fetch(API_URL)
-.then(r => r.json())
-.then(json => {
-
-data = json.slice(1).map(r => ({
-  code: r[1],
-  name: r[2],
-  date: r[3],
-  sym: r[4],
-  tstop: r[5],
-  tstart: r[6],
-  tfin: r[7],
-  req: r[8],
-  acc: r[9],
-  cause: r[10],
-  act: r[11],
-  deliver: r[12],
-  owner: r[13],
-  parts: []
-}));
-
-render();
-
-});
-
+alert("บันทึกแล้ว");
 }
 
 /* RENDER */
 function render(){
-tb.innerHTML = data.map((d,i)=>`
+tb.innerHTML=data.map((d,i)=>`
 <tr>
 <td>${d.code}</td>
 <td>${d.name}</td>
@@ -191,17 +307,15 @@ tb.innerHTML = data.map((d,i)=>`
 <td>${d.tfin}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
-
-<td>${d.parts?.map(p=>p.code).join('<br>') || ''}</td>
-<td>${d.parts?.map(p=>p.name).join('<br>') || ''}</td>
-<td>${d.parts?.map(p=>p.qty).join('<br>') || ''}</td>
-
+<td>${d.parts.map(p=>p.code).join('<br>')}</td>
+<td>${d.parts.map(p=>p.name).join('<br>')}</td>
+<td>${d.parts.map(p=>p.qty).join('<br>')}</td>
 <td><button class="small-btn del" onclick="del(${i})">ลบ</button></td>
 </tr>
 `).join('');
 }
 
-/* DELETE (local only - optional) */
+/* DELETE */
 function del(i){
 data.splice(i,1);
 render();
@@ -209,10 +323,12 @@ render();
 
 /* EXPORT */
 function exportCSV(){
-let csv="Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,Finish,Deliver,Owner\n";
+let csv="Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,Finish,Deliver,Owner,PartCode,PartName,QTY\n";
 
 data.forEach(d=>{
-csv+=`${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner}\n`;
+d.parts.forEach(p=>{
+csv+=`${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner},${p.code},${p.name},${p.qty}\n`;
+});
 });
 
 let blob=new Blob([csv]);
@@ -222,7 +338,7 @@ a.download="maintenance.csv";
 a.click();
 }
 
-/* INIT */
-loadData();
-
 </script>
+
+</body>
+</html>
