@@ -79,8 +79,57 @@ th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
   box-shadow: 0 0 0 3px rgba(79,70,229,0.2);
 }
 
-.dd{
-  width: 100%;
+.dd{width: 100%;
+}
+
+.table-wrap{
+  margin-top:10px;
+  max-height:70vh;
+  overflow:auto;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
+
+/* table style */
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:12px;
+  min-width:1200px;
+}
+
+/* HEADER FIXED */
+thead th{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#4f46e5;
+  color:#fff;
+  padding:10px;
+  text-align:left;
+  white-space:nowrap;
+}
+
+/* BODY */
+tbody td{
+  padding:8px;
+  border-bottom:1px solid #eee;
+  vertical-align:top;
+}
+
+/* hover */
+tbody tr:hover{
+  background:#f3f4f6;
+}
+
+/* ปุ่มลบ */
+.small-btn.del{
+  background:#ef4444;
+  color:#fff;
+  border:none;
+  padding:5px 8px;
+  border-radius:6px;
+  cursor:pointer;
 }
 
   
@@ -142,6 +191,35 @@ th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
 <button type="button" onclick="addPart()">+ เพิ่มอะไหล่</button>
 </div>
 
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>รหัสเครื่องจักร</th>
+<th>ชื่อเครื่องจักร</th>
+<th>วันที่แจ้ง</th>
+<th>อาการ</th>
+<th>เวลาหยุด</th>
+<th>เวลาเริ่ม</th>
+<th>ผู้แจ้ง</th>
+<th>ผู้รับแจ้ง</th>
+<th>สาเหตุ</th>
+<th>การแก้ไข</th>
+<th>วันที่เสร็จ</th>
+<th>เวลาเสร็จ</th>
+<th>ผู้ส่งเครื่อง</th>
+<th>ผู้รับเครื่อง</th>
+<th>รหัสอะไหล่</th>
+<th>ชื่ออะไหล่</th>
+<th>จำนวน</th>
+<th>ลบ</th>
+</tr>
+</thead>
+
+<tbody id="tb"></tbody>
+</table>
+</div>
+  
   
 </div>
 <button class="btn" onclick="save()">SAVE</button>
@@ -667,12 +745,13 @@ return `
 <td>${formatTime(d.tfin)}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
-
 <td>${partCode}</td>
 <td>${partName}</td>
 <td>${partQty}</td>
 
-<td><button class="small-btn del" onclick="del(${i})">X</button></td>
+<td>
+<button class="small-btn del" onclick="del(${i})">X</button>
+</td>
 </tr>
 `;
 }).join('');
@@ -688,16 +767,21 @@ function del(i){
 
 /* EXPORT */
 function exportCSV(){
-let csv="Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,Finish,Deliver,Owner\n";
+
+let csv = "Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,FinishDate,FinishTime,Deliver,Owner,PartCode,PartName,Qty\n";
 
 data.forEach(d=>{
-csv+=`${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner}\n`;
+let partCode = (d.parts||[]).map(p=>p.code).join("|");
+let partName = (d.parts||[]).map(p=>p.name).join("|");
+let partQty  = (d.parts||[]).map(p=>p.qty).join("|");
+
+csv += `${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.datef},${d.tfin},${d.deliver},${d.owner},${partCode},${partName},${partQty}\n`;
 });
 
-let blob=new Blob([csv]);
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="maintenance.csv";
+let blob = new Blob([csv], {type:"text/csv"});
+let a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "maintenance.csv";
 a.click();
 }
   
@@ -716,4 +800,6 @@ window.onload = function(){
 </script>
 
 </body>
+
+  
 </html>
