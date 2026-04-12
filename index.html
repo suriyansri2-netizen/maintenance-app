@@ -597,7 +597,22 @@ let data=[];
 
 function formatTime(t){
   if(!t) return "";
-  return t.substring(0,5);
+
+  // ถ้าเป็น Date object
+  if (typeof t === "object") {
+    let d = new Date(t);
+    return d.toLocaleTimeString("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  // ถ้าเป็น string
+  if (typeof t === "string") {
+    return t.substring(0,5);
+  }
+
+  return "";
 }
 
 /* TAB */
