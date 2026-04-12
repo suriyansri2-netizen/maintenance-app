@@ -104,14 +104,14 @@ th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
 
 <div class="fg"><label>วันที่</label><input id="date" type="date"></div>
 <div class="fg full"><label>อาการ</label><textarea id="sym"></textarea></div>
-<div class="fg"><label>เวลาหยุด</label><input id="tstop" type="time"></div>
-<div class="fg"><label>เวลาเริ่ม</label><input id="tstart"  type="time"></div>
+<div class="fg"><label>เวลาหยุด</label><input id="tstop" type="time"  step="60"></div>
+<div class="fg"><label>เวลาเริ่ม</label><input id="tstart"  type="time"  step="60"></div>
 <div class="fg"><label>ผู้แจ้ง</label><select id="req"></select></div>
 <div class="fg"><label>ผู้รับเเจ้ง</label><select id="acc"></select></div>
 <div class="fg full"><label>สาเหตุที่เป็นไปได้</label><textarea id="cause"></textarea></div>
 <div class="fg full"><label>ดำเนินการแก้ไข</label><textarea id="act"></textarea></div>
 <div class="fg"><label>วันที่เสร็จ</label><input id="datef" type="date"></div>
-<div class="fg"><label>เวลาเสร็จ</label><input id="tfin" type="time"></div>
+<div class="fg"><label>เวลาเสร็จ</label><input id="tfin" type="time"  step="60"></div>
 <div class="fg"><label>ผู้ส่งเครื่อง</label><select id="deliver"></select></div>
 <div class="fg"><label>ผู้รับเครื่อง</label><select id="owner"></select></div>
 
@@ -488,6 +488,11 @@ let MACHINES = [
 
 let data=[];
 
+function formatTime(t){
+  if(!t) return "";
+  return t.substring(0,5);
+}
+
 /* TAB */
 function switchTab(t,el){
 document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
@@ -600,9 +605,9 @@ code:machineCode.value,
 name:machineName.value,
 date:date.value,
 sym:sym.value,
-tstop:tstop.value,
-tstart:tstart.value,
-tfin:tfin.value,
+tstop: formatTime(tstop.value),
+tstart: formatTime(tstart.value),
+tfin: formatTime(tfin.value),
 req:req.value,
 acc:acc.value,
 cause:cause.value,
@@ -629,13 +634,13 @@ tb.innerHTML=data.map((d,i)=>
 <td>${d.name}</td>
 <td>${d.date}</td>
 <td>${d.sym}</td>
-<td>${d.tstop}</td>
-<td>${d.tstart}</td>
+<td>${formatTime(d.tstop)}</td>
+<td>${formatTime(d.tstart)}</td>
 <td>${d.req}</td>
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
-<td>${d.tfin}</td>
+<td>${formatTime(d.tfin)}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
 <td><button class="small-btn del" onclick="del(${i})">X</button></td>
