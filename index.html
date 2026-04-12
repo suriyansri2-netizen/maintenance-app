@@ -706,6 +706,36 @@ if(!validateForm()){
 alert("กรุณากรอกข้อมูลให้ครบ");
 return;
 }
+ 
+let parts = getParts();
+
+let partCode = parts.map(p => p.code).join(" | ");
+let partName = parts.map(p => p.name).join(" | ");
+let qty      = parts.map(p => p.qty).join(" | ");
+
+fetch("https://script.google.com/macros/s/AKfycbzuyU9mc1Byj44OK0rYZz-z-_GToRxQVPLR2cC7MI4rk6KdojgvHRtYb6ORUADQR22yMg/exec", {
+  method: "POST",
+  body: JSON.stringify({
+    code: machineCode.value,
+    name: machineName.value,
+    date: date.value,
+    sym: sym.value,
+    tstop: tstop.value,
+    tstart: tstart.value,
+    req: req.value,
+    acc: acc.value,
+    cause: cause.value,
+    act: act.value,
+    datef: datef.value,
+    tfin: tfin.value,
+    deliver: deliver.value,
+    owner: owner.value,
+
+    partCode,
+    partName,
+    qty
+  })
+});
 
 data.unshift({
   code:machineCode.value,
@@ -726,7 +756,8 @@ data.unshift({
 });
 
 localStorage.setItem("maintData", JSON.stringify(data));
-
+ 
+  
 alert("บันทึกข้อมูลสำเร็จ");
 render();
 }
