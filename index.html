@@ -132,8 +132,26 @@ tbody tr:hover{
   cursor:pointer;
 }
 
+  .history-toolbar{
+display:flex;
+gap:8px;
+margin:10px 0;
+flex-wrap:wrap;
+}
+
+.history-toolbar input,
+.history-toolbar select{
+flex:1;
+padding:8px;
+border-radius:8px;
+border:1px solid #ddd;
+font-size:12px;
+}
+
   
 </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 
   
@@ -228,46 +246,48 @@ tbody tr:hover{
 <!-- HISTORY -->
 <div id="history" class="sec">
 
-<button class="export" onclick="exportCSV()">Export CSV</button>
+<div class="history-toolbar">
+  <input id="searchHistory" placeholder="🔍 ค้นหาประวัติ..." oninput="render()">
 
+  <select id="filterMachine" onchange="render()">
+    <option value="">📊 ทุกเครื่องจักร</option>
+  </select>
+
+  <button class="export" onclick="exportExcel()">Export Excel</button>
+</div>
+
+<div class="table-wrap">
 <table>
-  
 <thead>
-<tr>
-<th>รหัสเครื่องจักร</th>
-<th>ชื่อเครื่องจักร</th>
-<th>วันที่แจ้ง</th>
-<th>อาการ</th>
-
-<th>เวลาหยุด</th>
-<th>เวลาเริ่ม</th>
-
-<th>ผู้แจ้ง</th>
-<th>ผู้รับแจ้ง</th>
-
-<th>สาเหตุ</th>
-<th>การแก้ไข</th>
-
-<th>วันที่เสร็จ</th>
-<th>เวลาเสร็จ</th>
-
-<th>ผู้ส่งเครื่อง</th>
-<th>ผู้รับเครื่อง</th>
-
-<th>รหัสอะไหล่</th>
-<th>ชื่ออะไหล่</th>
-<th>จำนวน</th>
-
-<th></th>
+<tr><th>รหัสเครื่องจักร</th>
+  <th>ชื่อเครื่องจักร</th>
+  <th>วันที่แจ้ง</th>
+  <th>อาการ</th>
+  <th>เวลาหยุด</th>
+  <th>เวลาเริ่ม</th>
+  <th>ผู้แจ้ง</th>
+  <th>ผู้รับแจ้ง</th>
+  <th>สาเหตุ</th>
+  <th>การแก้ไข</th>
+  <th>วันที่เสร็จ</th>
+  <th>เวลาเสร็จ</th>
+  <th>ผู้ส่งเครื่อง</th>
+  <th>ผู้รับเครื่อง</th>
+  <th>รหัสอะไหล่</th>
+  <th>ชื่ออะไหล่</th>
+  <th>จำนวน</th>
+  <th>ลบ</th>
 </tr>
 </thead>
-  
-<tbody id="tb"></tbody>
+
+<tbody id="tbHistory"></tbody>
+<!-- 🔥 ตรงนี้คือที่วาง tbody -->
+
 </table>
-
 </div>
 
 </div>
+
 </div>
 
 <script>
@@ -717,13 +737,33 @@ localStorage.setItem("maintData", JSON.stringify(data));
 
 alert("บันทึกข้อมูลสำเร็จ");
 render();
+}
 
-  
+
+function getFilteredData(){
+let q = document.getElementById("searchHistory")?.value?.toLowerCase() || "";
+let m = document.getElementById("filterMachine")?.value || "";
+
+return data.filter(d=>{
+let matchSearch =
+(d.code+d.name+d.sym+d.req+d.acc+d.cause+d.act)
+.toLowerCase()
+.includes(q);
+
+let matchMachine = m ? d.code === m : true;
+
+return matchSearch && matchMachine;
+});
 }
   
 /* RENDER */
 function render(){
-tb.innerHTML = data.map((d,i)=>{
+
+let tbody = document.getElementById("tbHistory");
+
+let list = getFilteredData();
+
+tbody.innerHTML = list.map((d,i)=>{
 
 let partCode = (d.parts||[]).map(p=>p.code).join("<br>");
 let partName = (d.parts||[]).map(p=>p.name).join("<br>");
@@ -741,20 +781,14 @@ return `
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
-<td>${d.datef || ""}</td>
+<td>${d.datef}</td>
 <td>${formatTime(d.tfin)}</td>
-<td>${d.deliver}</td>
-<td>${d.owner}</td>
-<td>${partCode}</td>
-<td>${partName}</td>
-<td>${partQty}</td>
-
-<td>
-<button class="small-btn del" onclick="del(${i})">X</button>
-</td>
+<td>${partCode}<br>${partName}<br>${partQty}</td>
+<td><button class="small-btn del" onclick="del(${i})">X</button></td>
 </tr>
 `;
-}).join('');
+}).join("");
+
 }
 
   
@@ -794,8 +828,46 @@ window.onload = function(){
   }
 
   render();
+  loadMachineFilter();
 };
 
+
+
+function exportExcel(){
+
+let ws_data = data.map(d=>({
+Code:d.code,
+Name:d.name,
+Date:d.date,
+Symptom:d.sym,
+Stop:d.tstop,
+Start:d.tstart,
+Request:d.req,
+Accept:d.acc,
+Cause:d.cause,
+Action:d.act,
+FinishDate:d.datef,
+FinishTime:d.tfin,
+Deliver:d.deliver,
+Owner:d.owner
+}));
+
+let ws = XLSX.utils.json_to_sheet(ws_data);
+let wb = XLSX.utils.book_new();
+XLSX.utils.book_append_sheet(wb, ws, "History");
+
+XLSX.writeFile(wb, "maintenance.xlsx");
+}
+
+
+function loadMachineFilter(){
+let sel = document.getElementById("filterMachine");
+
+let unique = [...new Set(MACHINES.map(m=>m.code))];
+
+sel.innerHTML = `<option value="">📊 ทุกเครื่องจักร</option>` +
+unique.map(c=>`<option value="${c}">${c}</option>`).join("");
+}
   
 </script>
 
