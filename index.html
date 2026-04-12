@@ -631,7 +631,8 @@ data.unshift({
   act:act.value,
   deliver:deliver.value,
   datef:datef.value,
-  owner:owner.value
+  owner:owner.value,
+  parts: getParts() 
 });
 
 localStorage.setItem("maintData", JSON.stringify(data));
@@ -644,8 +645,14 @@ render();
   
 /* RENDER */
 function render(){
-tb.innerHTML=data.map((d,i)=>
-`<tr>
+tb.innerHTML = data.map((d,i)=>{
+
+let partCode = (d.parts||[]).map(p=>p.code).join("<br>");
+let partName = (d.parts||[]).map(p=>p.name).join("<br>");
+let partQty  = (d.parts||[]).map(p=>p.qty).join("<br>");
+
+return `
+<tr>
 <td>${d.code}</td>
 <td>${d.name}</td>
 <td>${d.date}</td>
@@ -656,14 +663,22 @@ tb.innerHTML=data.map((d,i)=>
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
+<td>${d.datef || ""}</td>
 <td>${formatTime(d.tfin)}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
+
+<td>${partCode}</td>
+<td>${partName}</td>
+<td>${partQty}</td>
+
 <td><button class="small-btn del" onclick="del(${i})">X</button></td>
-</tr>`
-).join('');
+</tr>
+`;
+}).join('');
 }
 
+  
 /* DELETE */
 function del(i){
   data.splice(i,1);
