@@ -524,6 +524,12 @@ return arr;
 /* SAVE */
 function save(){
 
+  
+if(!machineCode.value || !machineName.value || !date.value || !sym.value || !req.value){
+alert("กรุณากรอกข้อมูลให้ครบ: Machine, Date, Symptom, Req");
+return;
+}
+
 data.unshift({
 code:machineCode.value,
 name:machineName.value,
