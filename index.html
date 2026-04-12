@@ -47,11 +47,18 @@ th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
 .sec.active{display:block}
 
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
+  
+.error{
+  border:1px solid #ef4444 !important;
+  background:#fff1f2;
+}
+
+  
 </style>
 </head>
 
+  
 <body>
-
 <div class="container">
 
 <div class="header">
@@ -537,12 +544,37 @@ return arr;
   owner.innerHTML = opts;
 }
 
+
+/*เพิ่ม เพิ่มฟังก์ชัน validate ตรงไหน? */
+  function validateForm(){
+
+let fields = [
+machineCode, machineName, date, sym,
+tstop, tstart, tfin,
+req, acc, cause, act,
+datef, owner, deliver
+];
+
+let ok = true;
+
+fields.forEach(f => f.classList.remove("error"));
+
+fields.forEach(f => {
+if(!f.value || f.value.trim() === ""){
+f.classList.add("error");
+ok = false;
+}
+});
+
+return ok;
+}
+  
   
 /* SAVE */
 function save(){
 
   
-if(!machineCode.value || !machineName.value || !date.value || !sym.value || !req.value || !tstop.value || !tstart.value || !tfin.value || !cause.value || !act.value || !datef.value || !req.value){
+if(!validateForm()){
 alert("กรุณากรอกข้อมูลให้ครบ");
 return;
 }
