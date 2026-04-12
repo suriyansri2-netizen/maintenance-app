@@ -731,7 +731,6 @@ fetch("https://script.google.com/macros/s/AKfycbzuyU9mc1Byj44OK0rYZz-z-_GToRxQVP
     tfin: tfin.value,
     deliver: deliver.value,
     owner: owner.value,
-
     partCode,
     partName,
     qty
@@ -753,7 +752,9 @@ data.unshift({
   deliver:deliver.value,
   datef:datef.value,
   owner:owner.value,
-  parts: getParts() 
+  partCode,
+  partName,
+  qty
 });
 
 localStorage.setItem("maintData", JSON.stringify(data));
