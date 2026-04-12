@@ -83,24 +83,19 @@ th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
 <div class="fg"><label>ชื่อเครื่องจักร</label><input id="machineName"></div>
 
 <div class="fg"><label>วันที่</label><input id="date" type="date"></div>
+<div class="fg full"><label>อาการ</label><textarea id="sym"></textarea></div>
 <div class="fg"><label>เวลาหยุด</label><input id="tstop" type="time"></div>
-<div class="fg"><label>Start</label><input id="tstart"  type="time"></div>
-<div class="fg"><label>Finish</label><input id="tfin" type="time"></div>
-
-<div class="fg full"><label>Symptom</label><textarea id="sym"></textarea></div>
-
-<div class="fg"><label>Req</label><input id="req"></div>
-<div class="fg"><label>Acc</label><input id="acc"></div>
-
-<div class="fg full"><label>Cause</label><textarea id="cause"></textarea></div>
-<div class="fg full"><label>Action</label><textarea id="act"></textarea></div>
-
-<div class="fg"><label>Deliver</label><input id="deliver"></div>
-<div class="fg"><label>Owner</label><input id="owner"></div>
+<div class="fg"><label>เวลาเริ่ม</label><input id="tstart"  type="time"></div>
+<div class="fg"><label>ผู้แจ้ง</label><input id="req"></div>
+<div class="fg"><label>ผู้รับเเจ้ง</label><input id="acc"></div>
+<div class="fg full"><label>สาเหตุที่เป็นไปได้</label><textarea id="cause"></textarea></div>
+<div class="fg full"><label>ดำเนินการแก้ไข</label><textarea id="act"></textarea></div>
+<div class="fg"><label>เวลาเสร็จ</label><input id="tfin" type="time"></div>
+<div class="fg"><label>ผู้ส่งเครื่อง</label><input id="deliver"></div>
+<div class="fg"><label>ผู้รับเครื่อง</label><input id="owner"></div>
 
 
 </div>
-
 <button class="btn" onclick="save()">SAVE</button>
 </div>
 
