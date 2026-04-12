@@ -506,7 +506,10 @@ const q=val.toLowerCase();
 const res=MACHINES.filter(m=>m.name.toLowerCase().includes(q)||m.code.includes(q));
 
 dd.innerHTML=res.map(m=>
-`<div onclick="selectMachine('${m.name}','${m.code}')">${m.name}<br><small>${m.code}</small></div>`
+`<div onclick="selectMachine('${m.name}','${m.code}')">
+  <b>${m.name}</b><br>
+  <small style="color:#666">${m.code}</small>
+</div>`
 ).join('');
 
 dd.style.display="block";
