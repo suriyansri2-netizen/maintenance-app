@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App 55</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -713,8 +713,7 @@ let partCode = parts.map(p => p.code).join(" | ");
 let partName = parts.map(p => p.name).join(" | ");
 let qty      = parts.map(p => p.qty).join(" | ");
 
-fetch("https://script.google.com/macros/s/AKfycbw0NhLkADSAE251QVYhge-1eLCuS2Q9v6g8oDJfTQ_kDLYN1OrLf_Tl7SaxEcNWNasSuw/exec", {
-
+fetch("https://script.google.com/macros/s/AKfycbxB_D2Ut1N7X9jBuWA2aClcih3fvwj6yK3G-_-CAppfTbhRPEEiQJZ9ovPU8BXWy-FZ0w/exec", {
   method: "POST",
   body: JSON.stringify({
     code: machineCode.value,
@@ -908,10 +907,20 @@ unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 }
 
 
-function loadFromSheet(){ fetch("https://script.google.com/macros/s/AKfycbw0NhLkADSAE251QVYhge-1eLCuS2Q9v6g8oDJfTQ_kDLYN1OrLf_Tl7SaxEcNWNasSuw/exec") 
-  .then(res => res.json()) .then(res => { console.log("DATA FROM SHEET:", res); 
-  data = res || []; render(); }) 
-  .catch(err => { console.error("โหลดข้อมูลไม่สำเร็จ", err); }); }
+function loadFromSheet() {
+  const url = "https://script.google.com/macros/s/AKfycbxB_D2Ut1N7X9jBuWA2aClcih3fvwj6yK3G-_-CAppfTbhRPEEiQJZ9ovPU8BXWy-FZ0w/exec";
+
+  const script = document.createElement("script");
+
+  window.handleData = function(res) {
+    data = res || [];
+    render();
+  };
+
+  script.src = `${url}?action=read&callback=handleData`;
+
+  document.body.appendChild(script);
+}
   
 </script>
 
