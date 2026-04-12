@@ -540,9 +540,12 @@ deliver:deliver.value,
 owner:owner.value
 });
 
-alert("Saved");
+alert("บันทึกข้อมูลสำเร็จ");
 render();
-}
+
+setTimeout(()=>{
+location.reload();
+}, 300);
 
 /* RENDER */
 function render(){
