@@ -832,20 +832,27 @@ window.onload = function(){
 function exportExcel(){
 
 let ws_data = data.map(d=>({
-Code:d.code,
-Name:d.name,
-Date:d.date,
-Symptom:d.sym,
-Stop:d.tstop,
-Start:d.tstart,
-Request:d.req,
-Accept:d.acc,
-Cause:d.cause,
-Action:d.act,
-FinishDate:d.datef,
-FinishTime:d.tfin,
-Deliver:d.deliver,
-Owner:d.owner
+
+CODE OF MACHINE:d.code,
+NAME OF MACHINE:d.name,
+วันที่:d.date,
+อาการ:d.sym,
+เวลาหยุด:d.tstop,
+เวลาเริ่ม:d.tstart,
+ผู้แจ้ง:d.req,
+ผู้รับแจ้ง:d.acc,
+สาเหตุที่เป็นไปได้:d.cause,
+ดำเนินการแก้ไข:d.act,
+วันที่เสร็จ:d.datef,
+เวลาเสร็จ:d.tfin,
+ผู้ส่งเครื่อง:d.deliver,
+ผู้รับเครื่อง:d.owner,
+Code TIK:partCode,
+Parts Description:partName,
+Price PER Unit:"",
+QTY.:partQty
+  
+  
 }));
 
 let ws = XLSX.utils.json_to_sheet(ws_data);
