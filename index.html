@@ -593,8 +593,6 @@ return ok;
   
 /* SAVE */
 function save(){
-
-  
 if(!validateForm()){
 alert("กรุณากรอกข้อมูลให้ครบ");
 return;
@@ -615,36 +613,55 @@ data.unshift({
   deliver:deliver.value,
   datef:datef.value,
   owner:owner.value
+    // ⭐ เพิ่มส่วนนี้
+  parts: getParts()
+  
 });
 
 localStorage.setItem("maintData", JSON.stringify(data));
-
 alert("บันทึกข้อมูลสำเร็จ");
 render();
-
-  
 }
+  
   
 /* RENDER */
 function render(){
-tb.innerHTML=data.map((d,i)=>
-`<tr>
+tb.innerHTML = data.map((d,i)=>{
+
+let partCode = "";
+let partName = "";
+let partQty = "";
+
+if(d.parts && d.parts.length > 0){
+  partCode = d.parts.map(p=>p.code).join("<br>");
+  partName = d.parts.map(p=>p.name).join("<br>");
+  partQty  = d.parts.map(p=>p.qty).join("<br>");
+}
+
+return `
+<tr>
 <td>${d.code}</td>
 <td>${d.name}</td>
 <td>${d.date}</td>
 <td>${d.sym}</td>
-<td>${formatTime(d.tstop)}</td>
-<td>${formatTime(d.tstart)}</td>
+<td>${d.tstop}</td>
+<td>${d.tstart}</td>
 <td>${d.req}</td>
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
-<td>${formatTime(d.tfin)}</td>
+<td>${d.datef}</td>
+<td>${d.tfin}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
+<td>${partCode}</td>
+<td>${partName}</td>
+<td>${partQty}</td>
+
 <td><button class="small-btn del" onclick="del(${i})">X</button></td>
-</tr>`
-).join('');
+</tr>
+`
+}).join('');
 }
 
 /* DELETE */
