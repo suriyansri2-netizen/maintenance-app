@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App</title>
+<title>Maintenance UT TIK App 55</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -45,7 +45,20 @@ textarea{min-height:50px}
 .dd div{padding:6px;font-size:12px;cursor:pointer}
 .dd div:hover{background:#eee}
 
-.parts-box{background:#f8faff;border:1px dashed #ccc;padding:8px;border-radius:8px;margin-top:5px;display:none}
+.part-row{
+  display:grid;
+  grid-template-columns: 2fr 4fr 80px 40px;
+  gap:8px;
+  margin-top:5px;
+}
+
+.part-row input{
+  width:100%;
+  padding:7px;
+  border-radius:6px;
+  border:1px solid #ddd;
+  font-size:12px;
+}
 .part-row{display:grid;grid-template-columns:1fr 1fr 60px 30px;gap:5px;margin-top:5px}
 
 table{width:100%;border-collapse:collapse;font-size:11px}
@@ -201,7 +214,7 @@ font-size:12px;
 
 
 <div class="fg full">
-<label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีอะไหล่</label>
+<label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีการเปลี่ยนอะไหล่</label>
 </div>
   
 <div id="partsBox" class="parts-box full">
