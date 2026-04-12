@@ -601,28 +601,27 @@ return;
 }
 
 data.unshift({
-code:machineCode.value,
-name:machineName.value,
-date:date.value,
-sym:sym.value,
-tstop: formatTime(tstop.value),
-tstart: formatTime(tstart.value),
-tfin: formatTime(tfin.value),
-req:req.value,
-acc:acc.value,
-cause:cause.value,
-act:act.value,
-deliver:deliver.value,
-datef:datef.value,
-owner:owner.value
+  code:machineCode.value,
+  name:machineName.value,
+  date:date.value,
+  sym:sym.value,
+  tstop: formatTime(tstop.value),
+  tstart: formatTime(tstart.value),
+  tfin: formatTime(tfin.value),
+  req:req.value,
+  acc:acc.value,
+  cause:cause.value,
+  act:act.value,
+  deliver:deliver.value,
+  datef:datef.value,
+  owner:owner.value
 });
+
+localStorage.setItem("maintData", JSON.stringify(data));
 
 alert("บันทึกข้อมูลสำเร็จ");
 render();
 
-setTimeout(()=>{
-location.reload();
-}, 500);
   
 }
   
@@ -650,8 +649,9 @@ tb.innerHTML=data.map((d,i)=>
 
 /* DELETE */
 function del(i){
-data.splice(i,1);
-render();
+  data.splice(i,1);
+  localStorage.setItem("maintData", JSON.stringify(data));
+  render();
 }
 
 /* EXPORT */
@@ -668,7 +668,19 @@ a.href=URL.createObjectURL(blob);
 a.download="maintenance.csv";
 a.click();
 }
-window.onload = loadUsers;
+  
+window.onload = function(){
+  loadUsers();
+
+  const saved = localStorage.getItem("maintData");
+  if(saved){
+    data = JSON.parse(saved);
+  }
+
+  render();
+};
+
+  
 </script>
 
 </body>
