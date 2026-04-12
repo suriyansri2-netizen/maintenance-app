@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App 55</title>
+<title>Maintenance UT TIK App </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -913,13 +913,23 @@ fetch("https://script.google.com/macros/s/AKfycbzuyU9mc1Byj44OK0rYZz-z-_GToRxQVP
 .then(res => {
   console.log("DATA FROM SHEET:", res);
 
-  data = res || [];
-  render();
-})
-.catch(err => {
-  console.error("โหลดข้อมูลไม่สำเร็จ", err);
-});
-}
+data = res.map(r => ({
+  code: r["รหัสเครื่องจักร"],
+  name: r["ชื่อเครื่องจักร"],
+  date: r["วันที่แจ้ง"],
+  sym: r["อาการ"],
+  tstop: r["เวลาหยุด"],
+  tstart: r["เวลาเริ่ม"],
+  req: r["ผู้แจ้ง"],
+  acc: r["ผู้รับแจ้ง"],
+  cause: r["สาเหตุ"],
+  act: r["การแก้ไข"],
+  datef: r["วันที่เสร็จ"],
+  tfin: r["เวลาเสร็จ"],
+  deliver: r["ผู้ส่งเครื่อง"],
+  owner: r["ผู้รับเครื่อง"],
+  parts: [] // ถ้ายังไม่ได้เก็บ array
+}));
   
 </script>
 
