@@ -558,26 +558,6 @@ tb.innerHTML=data.map((d,i)=>
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
-<td>${d.datef || ""}</td>
-<td>${d.tfin}</td>
-<td>${d.deliver}</td>
-<td>${d.owner}</td>
-<td>${(d.parts||[]).map(p=>p.name+"("+p.qty+")").join(", ")}</td>
-<td><button class="small-btn del" onclick="del(${i})">X</button></td>
-</tr>`
-).join('');
-}
-`<tr>
-<td>${d.code}</td>
-<td>${d.name}</td>
-<td>${d.date}</td>
-<td>${d.sym}</td>
-<td>${d.tstop}</td>
-<td>${d.tstart}</td>
-<td>${d.req}</td>
-<td>${d.acc}</td>
-<td>${d.cause}</td>
-<td>${d.act}</td>
 <td>${d.tfin}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
