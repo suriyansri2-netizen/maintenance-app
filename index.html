@@ -714,6 +714,7 @@ let partName = parts.map(p => p.name).join(" | ");
 let qty      = parts.map(p => p.qty).join(" | ");
 
 fetch("https://script.google.com/macros/s/AKfycbzuyU9mc1Byj44OK0rYZz-z-_GToRxQVPLR2cC7MI4rk6KdojgvHRtYb6ORUADQR22yMg/exec", {
+
   method: "POST",
   body: JSON.stringify({
     code: machineCode.value,
@@ -849,12 +850,8 @@ a.click();
 window.onload = function(){
   loadUsers();
 
-  const saved = localStorage.getItem("maintData");
-  if(saved){
-    data = JSON.parse(saved);
-  }
+  loadFromSheet(); // 👈 เพิ่มตรงนี้
 
-  render();
   loadMachineFilter();
 };
 
@@ -908,6 +905,20 @@ let unique = [...new Set(MACHINES.map(m=>m.code))];
 sel.innerHTML = `<option value="">📊 ทุกเครื่องจักร</option>` +
 unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 }
+
+
+function loadFromSheet(){
+
+fetch("https://script.google.com/macros/s/AKfycbzuyU9mc1Byj44OK0rYZz-z-_GToRxQVPLR2cC7MI4rk6KdojgvHRtYb6ORUADQR22yMg/exec")
+.then(res => res.json())
+.then(res => {
+
+data = res;   // 👈 สำคัญมาก เอาข้อมูลจากชีทมาแทน local
+
+render();     // รีเฟรช history
+});
+}
+
   
 </script>
 
