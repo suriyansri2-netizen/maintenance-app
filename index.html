@@ -95,7 +95,16 @@ th,td{padding:5px;border-bottom:1px solid #eee;text-align:left}
 <div class="fg"><label>ผู้ส่งเครื่อง</label><input id="deliver"></div>
 <div class="fg"><label>ผู้รับเครื่อง</label><input id="owner"></div>
 
+<div class="fg full">
+<label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีอะไหล่</label>
+</div>
+  
+<div id="partsBox" class="parts-box full">
+<div id="parts"></div>
+<button type="button" onclick="addPart()">+ เพิ่มอะไหล่</button>
+</div>
 
+  
 </div>
 <button class="btn" onclick="save()">SAVE</button>
 </div>
