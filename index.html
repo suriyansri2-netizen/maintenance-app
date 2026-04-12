@@ -542,7 +542,7 @@ return arr;
 function save(){
 
   
-if(!machineCode.value || !machineName.value || !date.value || !sym.value || !req.value){
+if(!machineCode.value || !machineName.value || !date.value || !sym.value || !req.value || !tstop.value || !tstart.value || !tfin.value || !cause.value || !act.value || !datef.value || !req.value){
 alert("กรุณากรอกข้อมูลให้ครบ: Machine, Date, Symptom, Req");
 return;
 }
@@ -560,6 +560,7 @@ acc:acc.value,
 cause:cause.value,
 act:act.value,
 deliver:deliver.value,
+datef:datef.value,
 owner:owner.value
 });
 
@@ -568,7 +569,7 @@ render();
 
 setTimeout(()=>{
 location.reload();
-}, 300);
+}, 500);
   
 }
   
