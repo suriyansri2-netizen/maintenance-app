@@ -831,29 +831,35 @@ window.onload = function(){
 
 function exportExcel(){
 
-let ws_data = data.map(d=>({
+let ws_data = data.map(d=>{
 
-CODE OF MACHINE:d.code,
-NAME OF MACHINE:d.name,
-วันที่:d.date,
-อาการ:d.sym,
-เวลาหยุด:d.tstop,
-เวลาเริ่ม:d.tstart,
-ผู้แจ้ง:d.req,
-ผู้รับแจ้ง:d.acc,
-สาเหตุที่เป็นไปได้:d.cause,
-ดำเนินการแก้ไข:d.act,
-วันที่เสร็จ:d.datef,
-เวลาเสร็จ:d.tfin,
-ผู้ส่งเครื่อง:d.deliver,
-ผู้รับเครื่อง:d.owner,
-Code TIK:partCode,
-Parts Description:partName,
-Price PER Unit:"",
-QTY.:partQty
-  
-  
-}));
+  let partCode = (d.parts||[]).map(p=>p.code).join("\n");
+  let partName = (d.parts||[]).map(p=>p.name).join("\n");
+  let partQty  = (d.parts||[]).map(p=>p.qty).join("\n");
+
+  return {
+    "CODE OF MACHINE": d.code,
+    "NAME OF MACHINE": d.name,
+    "วันที่": d.date,
+    "อาการ": d.sym,
+    "เวลาหยุด": d.tstop,
+    "เวลาเริ่ม": d.tstart,
+    "ผู้แจ้ง": d.req,
+    "ผู้รับแจ้ง": d.acc,
+    "สาเหตุที่เป็นไปได้": d.cause,
+    "ดำเนินการแก้ไข": d.act,
+    "วันที่เสร็จ": d.datef,
+    "เวลาเสร็จ": d.tfin,
+    "ผู้ส่งเครื่อง": d.deliver,
+    "ผู้รับเครื่อง": d.owner,
+    "Code TIK": partCode,
+    "Parts Description": partName,
+     "Price PER Unit": "",
+    "QTY": partQty
+   
+  };
+
+});
 
 let ws = XLSX.utils.json_to_sheet(ws_data);
 let wb = XLSX.utils.book_new();
