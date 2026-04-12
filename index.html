@@ -713,7 +713,7 @@ let partCode = parts.map(p => p.code).join(" | ");
 let partName = parts.map(p => p.name).join(" | ");
 let qty      = parts.map(p => p.qty).join(" | ");
 
-fetch("https://script.google.com/macros/s/AKfycbyAlz101wAZ_NcUIq-kLhoGrBdyCfzz0KCRAcxWIHFxGq02pHmoisQh7ZP2Tu3AYM7fPg/exec", {
+fetch("https://script.google.com/macros/s/AKfycbwMgmjC2qQIgq90XUPmqyD5d_MFryjzBFLQeVV-OX-1R32LcHdfIE7mfBdT9yYbzHVo5w/exec", {
   method: "POST",
   body: JSON.stringify({
     code: machineCode.value,
@@ -734,7 +734,7 @@ fetch("https://script.google.com/macros/s/AKfycbyAlz101wAZ_NcUIq-kLhoGrBdyCfzz0K
     partName,
     qty
   })
-});
+})
 
 data.unshift({
   code:machineCode.value,
@@ -907,18 +907,17 @@ unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 }
 
 
-function loadFromSheet() {
-  const url = "https://script.google.com/macros/s/AKfycbyAlz101wAZ_NcUIq-kLhoGrBdyCfzz0KCRAcxWIHFxGq02pHmoisQh7ZP2Tu3AYM7fPg/exec";
 
-  const script = document.createElement("script");
+function loadFromSheet() {
+  const url = "https://script.google.com/macros/s/AKfycbwMgmjC2qQIgq90XUPmqyD5d_MFryjzBFLQeVV-OX-1R32LcHdfIE7mfBdT9yYbzHVo5w/exec";
 
   window.handleData = function(res) {
     data = res || [];
     render();
   };
 
-  script.src = `${url}?action=read&callback=handleData`;
-
+  const script = document.createElement("script");
+  script.src = url + "?callback=handleData";
   document.body.appendChild(script);
 }
   
