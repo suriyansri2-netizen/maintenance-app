@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App 55</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -908,17 +908,18 @@ unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 
 
 function loadFromSheet(){
-
 fetch("https://script.google.com/macros/s/AKfycbzuyU9mc1Byj44OK0rYZz-z-_GToRxQVPLR2cC7MI4rk6KdojgvHRtYb6ORUADQR22yMg/exec")
 .then(res => res.json())
 .then(res => {
+  console.log("DATA FROM SHEET:", res);
 
-data = res;   // 👈 สำคัญมาก เอาข้อมูลจากชีทมาแทน local
-
-render();     // รีเฟรช history
+  data = res || [];
+  render();
+})
+.catch(err => {
+  console.error("โหลดข้อมูลไม่สำเร็จ", err);
 });
 }
-
   
 </script>
 
