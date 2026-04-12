@@ -713,7 +713,7 @@ let partCode = parts.map(p => p.code).join(" | ");
 let partName = parts.map(p => p.name).join(" | ");
 let qty      = parts.map(p => p.qty).join(" | ");
 
-fetch("https://script.google.com/macros/s/AKfycbxB_D2Ut1N7X9jBuWA2aClcih3fvwj6yK3G-_-CAppfTbhRPEEiQJZ9ovPU8BXWy-FZ0w/exec", {
+fetch("https://script.google.com/macros/s/AKfycbyAlz101wAZ_NcUIq-kLhoGrBdyCfzz0KCRAcxWIHFxGq02pHmoisQh7ZP2Tu3AYM7fPg/exec", {
   method: "POST",
   body: JSON.stringify({
     code: machineCode.value,
@@ -908,7 +908,7 @@ unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 
 
 function loadFromSheet() {
-  const url = "https://script.google.com/macros/s/AKfycbxB_D2Ut1N7X9jBuWA2aClcih3fvwj6yK3G-_-CAppfTbhRPEEiQJZ9ovPU8BXWy-FZ0w/exec";
+  const url = "https://script.google.com/macros/s/AKfycbyAlz101wAZ_NcUIq-kLhoGrBdyCfzz0KCRAcxWIHFxGq02pHmoisQh7ZP2Tu3AYM7fPg/exec";
 
   const script = document.createElement("script");
 
