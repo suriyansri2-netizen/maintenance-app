@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -511,10 +512,10 @@ const q=val.toLowerCase();
 const res=MACHINES.filter(m=>m.name.toLowerCase().includes(q)||m.code.includes(q));
 
 dd.innerHTML=res.map(m=>
-`<div onclick="selectMachine('${m.name}','${m.code}')">
+<div onclick="selectMachine('${m.name}','${m.code}')">
   <b>${m.name}</b><br>
   <small style="color:#666">${m.code}</small>
-</div>`
+</div>
 ).join('');
 
 dd.style.display="block";
@@ -536,12 +537,12 @@ partsBox.style.display=hasPart.checked?"block":"none";
 function addPart(){
 const row=document.createElement("div");
 row.className="part-row";
-row.innerHTML=`
+row.innerHTML=
 <input placeholder="Code"></div>
 <input placeholder="Name"></div>
 <input type="number" value="1">
 <button onclick="this.parentElement.remove()">x</button>
-`;
+;
 parts.appendChild(row);
 }
 
@@ -557,7 +558,7 @@ return arr;
 
   /* SELECT NAME  */
   function loadUsers(){
-  let opts = USERS.map(u => `<option value="${u}">${u}</option>`).join("");
+  let opts = USERS.map(u => <option value="${u}">${u}</option>).join("");
 
   req.innerHTML = opts;
   acc.innerHTML = opts;
@@ -593,6 +594,8 @@ return ok;
   
 /* SAVE */
 function save(){
+
+  
 if(!validateForm()){
 alert("กรุณากรอกข้อมูลให้ครบ");
 return;
@@ -613,55 +616,36 @@ data.unshift({
   deliver:deliver.value,
   datef:datef.value,
   owner:owner.value
-    // ⭐ เพิ่มส่วนนี้
-  parts: getParts()
-  
 });
 
 localStorage.setItem("maintData", JSON.stringify(data));
+
 alert("บันทึกข้อมูลสำเร็จ");
 render();
-}
+
   
+}
   
 /* RENDER */
 function render(){
-tb.innerHTML = data.map((d,i)=>{
-
-let partCode = "";
-let partName = "";
-let partQty = "";
-
-if(d.parts && d.parts.length > 0){
-  partCode = d.parts.map(p=>p.code).join("<br>");
-  partName = d.parts.map(p=>p.name).join("<br>");
-  partQty  = d.parts.map(p=>p.qty).join("<br>");
-}
-
-return `
+tb.innerHTML=data.map((d,i)=>
 <tr>
 <td>${d.code}</td>
 <td>${d.name}</td>
 <td>${d.date}</td>
 <td>${d.sym}</td>
-<td>${d.tstop}</td>
-<td>${d.tstart}</td>
+<td>${formatTime(d.tstop)}</td>
+<td>${formatTime(d.tstart)}</td>
 <td>${d.req}</td>
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
-<td>${d.datef}</td>
-<td>${d.tfin}</td>
+<td>${formatTime(d.tfin)}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
-<td>${partCode}</td>
-<td>${partName}</td>
-<td>${partQty}</td>
-
 <td><button class="small-btn del" onclick="del(${i})">X</button></td>
 </tr>
-`
-}).join('');
+).join('');
 }
 
 /* DELETE */
@@ -676,7 +660,7 @@ function exportCSV(){
 let csv="Code,Name,Date,Symptom,Stop,Start,Req,Acc,Cause,Action,Finish,Deliver,Owner\n";
 
 data.forEach(d=>{
-csv+=`${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner}\n`;
+csv+=${d.code},${d.name},${d.date},${d.sym},${d.tstop},${d.tstart},${d.req},${d.acc},${d.cause},${d.act},${d.tfin},${d.deliver},${d.owner}\n;
 });
 
 let blob=new Blob([csv]);
