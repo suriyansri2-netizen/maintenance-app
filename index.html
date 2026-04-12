@@ -470,6 +470,35 @@ machineName.value=n;
 dropdown.style.display="none";
 }
 
+
+/* PART */
+function togglePart(){
+partsBox.style.display=hasPart.checked?"block":"none";
+}
+
+function addPart(){
+const row=document.createElement("div");
+row.className="part-row";
+row.innerHTML=`
+<input placeholder="Code">
+<input placeholder="Name">
+<input type="number" value="1">
+<button onclick="this.parentElement.remove()">x</button>
+`;
+parts.appendChild(row);
+}
+
+function getParts(){
+let arr=[];
+document.querySelectorAll(".part-row").forEach(r=>{
+const i=r.querySelectorAll("input");
+arr.push({code:i[0].value,name:i[1].value,qty:i[2].value});
+});
+return arr;
+}
+
+
+  
 /* SAVE */
 function save(){
 
