@@ -1,0 +1,8 @@
+fetch("https://script.google.com/macros/s/AKfycbz9U9CzOG2ChtuPRD1W_cmYJrTm4T47eVz2UtCMBPp00dWsKGIXOX5ZZNU9fb0v2mbI/exec", {
+  method: "POST",
+  body: JSON.stringify({
+    test: "hello"
+  })
+})
+.then(res => res.text())
+.then(data => console.log(data));
