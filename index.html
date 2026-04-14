@@ -618,14 +618,6 @@ function formatTime(t){
   return "";
 }
 
-  // ถ้าเป็น string
-  if (typeof t === "string") {
-    return t.substring(0,5);
-  }
-
-  return "";
-}
-
 /* TAB */
 function switchTab(t,el){
 document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
