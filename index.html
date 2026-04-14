@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App55 </title>
+<title>Maintenance UT TIK App </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -804,9 +804,9 @@ let list = getFilteredData();
 
 tbody.innerHTML = list.map((d,i)=>{
 
-let partCode = (d.parts||[]).map(p=>p.code).join("<br>");
-let partName = (d.parts||[]).map(p=>p.name).join("<br>");
-let partQty  = (d.parts||[]).map(p=>p.qty).join("<br>");
+let partCode = (d.partCode || "").replaceAll("|", "<br>");
+let partName = (d.partName || "").replaceAll("|", "<br>");
+let partQty  = (d.qty || "").replaceAll("|", "<br>");
 
 return `
 <tr>
