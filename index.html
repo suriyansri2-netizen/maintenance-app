@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App 5555</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -595,17 +595,28 @@ let MACHINES = [
 
 let data=[];
 
+
+  // FormateTime
 function formatTime(t){
   if(!t) return "";
 
-  // ถ้าเป็น Date object
-  if (typeof t === "object") {
+  // ถ้าเป็น Date object (มาจาก Google Sheet)
+  if (Object.prototype.toString.call(t) === "[object Date]") {
     let d = new Date(t);
-    return d.toLocaleTimeString("en-GB", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
+
+    let h = ("0" + d.getHours()).slice(-2);
+    let m = ("0" + d.getMinutes()).slice(-2);
+
+    return `${h}:${m}`;
   }
+
+  // ถ้าเป็น string เช่น "08:30:00"
+  if (typeof t === "string") {
+    return t.substring(0,5);
+  }
+
+  return "";
+}
 
   // ถ้าเป็น string
   if (typeof t === "string") {
