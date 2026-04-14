@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App 55</title>
+<title>Maintenance UT TIK App </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -812,7 +812,7 @@ return `
 <tr>
 <td>${d.code}</td>
 <td>${d.name}</td>
-<td>${d.date}</td>
+<td>${formatDate(d.date)}</td>
 <td>${d.sym}</td>
 <td>${formatTime(d.tstop)}</td>
 <td>${formatTime(d.tstart)}</td>
@@ -820,7 +820,7 @@ return `
 <td>${d.acc}</td>
 <td>${d.cause}</td>
 <td>${d.act}</td>
-<td>${d.datef}</td>
+<td>${formatDate(d.datef)}</td>
 <td>${formatTime(d.tfin)}</td>
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
@@ -935,6 +935,25 @@ function loadFromSheet() {
   script.src = url + "?callback=handleData";
   document.body.appendChild(script);
 }
+
+
+
+  // Format Date
+  function formatDate(d){
+  if(!d) return "";
+
+  let dateObj = new Date(d);
+
+  let day = ("0" + dateObj.getDate()).slice(-2);
+  let month = ("0" + (dateObj.getMonth()+1)).slice(-2);
+  let year = dateObj.getFullYear();
+
+  return `${day}/${month}/${year}`;
+}
+
+
+
+  
   
 </script>
 
