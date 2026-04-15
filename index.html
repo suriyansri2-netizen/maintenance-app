@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App555 </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -884,42 +884,40 @@ function render(){
     return `
     <tr>
 
-      <td>${d.code ?? ""}</td>
-      <td>${d.name ?? ""}</td>
+      <td>${d.code || ""}</td>
+      <td>${d.name || ""}</td>
       <td>${formatDate(d.date)}</td>
-      <td>${d.sym ?? ""}</td>
-      <td>${d.tstop ?? ""}</td>
-      <td>${d.tstart ?? ""}</td>
-      <td>${d.req ?? ""}</td>
-      <td>${d.acc ?? ""}</td>
-      <td>${d.cause ?? ""}</td>
-      <td>${d.act ?? ""}</td>
+      <td>${d.sym || ""}</td>
+      <td>${d.tstop || ""}</td>
+      <td>${d.tstart || ""}</td>
+      <td>${d.req || ""}</td>
+      <td>${d.acc || ""}</td>
+      <td>${d.cause || ""}</td>
+      <td>${d.act || ""}</td>
       <td>${formatDate(d.datef)}</td>
-      <td>${d.tfin ?? ""}</td>
-      <td>${d.deliver ?? ""}</td>
-      <td>${d.owner ?? ""}</td>
+      <td>${d.tfin || ""}</td>
+      <td>${d.deliver || ""}</td>
+      <td>${d.owner || ""}</td>
 
-      <td>${d.partCode ?? ""}</td>
-      <td>${d.partName ?? ""}</td>
-      <td>${d.qty ?? ""}</td>
-
-      <td>
-        ${d.image ? `
-          <a href="${d.image}" target="_blank">
-            <img src="${d.image}" style="width:60px;border-radius:6px">
-          </a>
-        ` : ""}
-      </td>
+      <td>${d.partCode || ""}</td>
+      <td>${d.partName || ""}</td>
+      <td>${d.qty || ""}</td>
 
       <td>
-        <button class="small-btn del" onclick="del(${i})">X</button>
+        ${d.image
+          ? `<a href="${d.image}" target="_blank">
+              <img src="${d.image}" style="width:60px;border-radius:6px">
+            </a>`
+          : ""
+        }
       </td>
+
+      <td><button class="small-btn del" onclick="del(${i})">X</button></td>
 
     </tr>
     `;
   }).join("");
 }
-
   
 /* DELETE */
 function del(i){
@@ -1012,10 +1010,31 @@ unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 function loadFromSheet() {
   const url = "https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec";
 
-  window.handleData = function(res) {
-    data = res || [];
-    render();
-  };
+window.handleData = function(res) {
+
+  data = (res || []).map(d => ({
+    code: d.code || "",
+    name: d.name || "",
+    date: d.date || "",
+    sym: d.sym || "",
+    tstop: d.tstop || "",
+    tstart: d.tstart || "",
+    req: d.req || "",
+    acc: d.acc || "",
+    cause: d.cause || "",
+    act: d.act || "",
+    datef: d.datef || "",
+    tfin: d.tfin || "",
+    deliver: d.deliver || "",
+    owner: d.owner || "",
+    partCode: d.partCode || "",
+    partName: d.partName || "",
+    qty: d.qty || "",
+    image: d.image || ""
+  }));
+
+  render();
+};
 
   const script = document.createElement("script");
   script.src = url + "?callback=handleData";
