@@ -811,51 +811,49 @@ return ok;
   
   
 /* SAVE */
-function save(){
+async function save(){
 
   if(!validateForm()){
     alert("กรุณากรอกข้อมูลให้ครบ");
     return;
   }
 
-   let parts = getParts();
+  let parts = getParts();
 
   let partCode = parts.map(p => p.code).join(" | ");
   let partName = parts.map(p => p.name).join(" | ");
   let qty      = parts.map(p => p.qty).join(" | ");
 
-    const formData = new FormData();
+  const img1 = document.getElementById("img1").files[0];
+  const img2 = document.getElementById("img2").files[0];
+  const img3 = document.getElementById("img3").files[0];
 
-const file1 = document.getElementById("img1").files[0];
-const file2 = document.getElementById("img2").files[0];
-const file3 = document.getElementById("img3").files[0];
+  const payload = {
+    code: machineCode.value,
+    name: machineName.value,
+    date: date.value,
+    sym: sym.value,
+    tstop: tstop.value,
+    tstart: tstart.value,
+    req: req.value,
+    acc: acc.value,
+    cause: cause.value,
+    act: act.value,
+    datef: datef.value,
+    tfin: tfin.value,
+    deliver: deliver.value,
+    owner: owner.value,
+    partCode,
+    partName,
+    qty,
+    image1: img1 ? await toBase64(img1) : "",
+    image2: img2 ? await toBase64(img2) : "",
+    image3: img3 ? await toBase64(img3) : ""
+  };
 
-if (file1) formData.append("image1", file1);
-if (file2) formData.append("image2", file2);
-if (file3) formData.append("image3", file3);
- 
-
-  formData.append("code", machineCode.value);
-  formData.append("name", machineName.value);
-  formData.append("date", date.value);
-  formData.append("sym", sym.value);
-  formData.append("tstop", tstop.value);
-  formData.append("tstart", tstart.value);
-  formData.append("req", req.value);
-  formData.append("acc", acc.value);
-  formData.append("cause", cause.value);
-  formData.append("act", act.value);
-  formData.append("datef", datef.value);
-  formData.append("tfin", tfin.value);
-  formData.append("deliver", deliver.value);
-  formData.append("owner", owner.value);
-  formData.append("partCode", partCode);
-  formData.append("partName", partName);
-  formData.append("qty", qty);
-
-  fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
+  await fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
     method: "POST",
-    body: formData
+    body: JSON.stringify(payload)
   });
 
   alert("บันทึกแล้ว");
@@ -1091,6 +1089,15 @@ window.handleData = function(res) {
   return `${day}/${month}/${year}`;
 }
 
+
+  function toBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 
   
