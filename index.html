@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App  555</title>
+<title>Maintenance UT TIK App </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -877,45 +877,47 @@ return matchSearch && matchMachine;
 function render(){
 
   let tbody = document.getElementById("tbHistory");
-
   let list = getFilteredData();
 
   tbody.innerHTML = list.map((d,i)=>{
 
     return `
     <tr>
-      <td>${d.code || ""}</td>
-      <td>${d.name || ""}</td>
-      <td>${formatDate(d.date)}</td>
-      <td>${d.sym || ""}</td>
-      <td>${d.tstop || ""}</td>
-      <td>${d.tstart || ""}</td>
-      <td>${d.req || ""}</td>
-      <td>${d.acc || ""}</td>
-      <td>${d.cause || ""}</td>
-      <td>${d.act || ""}</td>
-      <td>${formatDate(d.datef)}</td>
-      <td>${d.tfin || ""}</td>
-      <td>${d.deliver || ""}</td>
-      <td>${d.owner || ""}</td>
 
-      <td>${d.partCode || ""}</td>
-      <td>${d.partName || ""}</td>
-      <td>${d.qty || ""}</td>
+      <td>${d.code ?? ""}</td>
+      <td>${d.name ?? ""}</td>
+      <td>${formatDate(d.date)}</td>
+      <td>${d.sym ?? ""}</td>
+      <td>${d.tstop ?? ""}</td>
+      <td>${d.tstart ?? ""}</td>
+      <td>${d.req ?? ""}</td>
+      <td>${d.acc ?? ""}</td>
+      <td>${d.cause ?? ""}</td>
+      <td>${d.act ?? ""}</td>
+      <td>${formatDate(d.datef)}</td>
+      <td>${d.tfin ?? ""}</td>
+      <td>${d.deliver ?? ""}</td>
+      <td>${d.owner ?? ""}</td>
+
+      <td>${d.partCode ?? ""}</td>
+      <td>${d.partName ?? ""}</td>
+      <td>${d.qty ?? ""}</td>
 
       <td>
         ${d.image ? `
           <a href="${d.image}" target="_blank">
-            <img src="${d.image}" style="width:60px;border-radius:6px;transition:0.2s">
-          </a>` : ""
-        }
+            <img src="${d.image}" style="width:60px;border-radius:6px">
+          </a>
+        ` : ""}
       </td>
 
-      <td><button class="small-btn del" onclick="del(${i})">X</button></td>
+      <td>
+        <button class="small-btn del" onclick="del(${i})">X</button>
+      </td>
+
     </tr>
     `;
   }).join("");
-
 }
 
   
