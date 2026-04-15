@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App555 </title>
+<title>Maintenance UT TIK App  </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -1012,26 +1012,55 @@ function loadFromSheet() {
 
 window.handleData = function(res) {
 
-  data = (res || []).map(d => ({
-    code: d.code || "",
-    name: d.name || "",
-    date: d.date || "",
-    sym: d.sym || "",
-    tstop: d.tstop || "",
-    tstart: d.tstart || "",
-    req: d.req || "",
-    acc: d.acc || "",
-    cause: d.cause || "",
-    act: d.act || "",
-    datef: d.datef || "",
-    tfin: d.tfin || "",
-    deliver: d.deliver || "",
-    owner: d.owner || "",
-    partCode: d.partCode || "",
-    partName: d.partName || "",
-    qty: d.qty || "",
-    image: d.image || ""
-  }));
+  data = (res || []).map(row => {
+
+    // 🔥 ถ้าเป็น ARRAY (จาก sheet ปกติ)
+    if (Array.isArray(row)) {
+      return {
+        code: row[1] || "",
+        name: row[2] || "",
+        date: row[3] || "",
+        sym: row[4] || "",
+        tstop: row[5] || "",
+        tstart: row[6] || "",
+        req: row[7] || "",
+        acc: row[8] || "",
+        cause: row[9] || "",
+        act: row[10] || "",
+        datef: row[11] || "",
+        tfin: row[12] || "",
+        deliver: row[13] || "",
+        owner: row[14] || "",
+        partCode: row[15] || "",
+        partName: row[16] || "",
+        qty: row[17] || "",
+        image: row[18] || ""
+      };
+    }
+
+    // 🔥 ถ้าเป็น OBJECT
+    return {
+      code: row.code || "",
+      name: row.name || "",
+      date: row.date || "",
+      sym: row.sym || "",
+      tstop: row.tstop || "",
+      tstart: row.tstart || "",
+      req: row.req || "",
+      acc: row.acc || "",
+      cause: row.cause || "",
+      act: row.act || "",
+      datef: row.datef || "",
+      tfin: row.tfin || "",
+      deliver: row.deliver || "",
+      owner: row.owner || "",
+      partCode: row.partCode || "",
+      partName: row.partName || "",
+      qty: row.qty || "",
+      image: row.image || ""
+    };
+
+  });
 
   render();
 };
