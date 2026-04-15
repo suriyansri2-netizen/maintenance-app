@@ -811,6 +811,28 @@ return ok;
   
   
 /* SAVE */
+const IMGBB_KEY = "f1e115acbf0317f3812bda32ef9162b9";
+
+async function uploadToImgBB(file) {
+  if (!file) return "";
+
+  const base64 = await resizeImage(file); // resize ก่อน
+  const b64clean = base64.split(",")[1];  // ตัด data:image/jpeg;base64, ออก
+
+  const form = new FormData();
+  form.append("key", IMGBB_KEY);
+  form.append("image", b64clean);
+
+  const res = await fetch("https://api.imgbb.com/1/upload", {
+    method: "POST",
+    body: form
+  });
+
+  const json = await res.json();
+  return json.data?.url || "";
+}
+
+
 async function save() {
   if (!validateForm()) {
     alert("กรุณากรอกข้อมูลให้ครบ");
@@ -821,10 +843,19 @@ async function save() {
   btn.textContent = "กำลังบันทึก...";
   btn.disabled = true;
 
-  const url = "https://script.google.com/macros/s/AKfycbxfggA_7YpFQMax8bGwFn_uuqdSnNZSu4M5Fd-rPkrOGeX4gFE6zfWPbbn-xiCjAMx7FQ/exec";
+  const url = "https://script.google.com/macros/s/AKfycby8qXWWvERtdjJzANShR3etSq41mGu70UpNrIN44yuFfLPiJNmEFqcSvXjpOAGrA0R3FA/exec";
 
   try {
-    // ── STEP 1: ส่งข้อมูลตัวอักษรก่อน ผ่าน GET ──
+    // ── อัปโหลดรูปไป ImgBB ก่อน ได้ URL กลับมา ──
+    btn.textContent = "กำลังอัปโหลดรูป...";
+    const [url1, url2, url3] = await Promise.all([
+      uploadToImgBB(img1.files[0]),
+      uploadToImgBB(img2.files[0]),
+      uploadToImgBB(img3.files[0])
+    ]);
+
+    // ── ส่งข้อมูลทั้งหมด + URL รูป ไป GAS ผ่าน GET ──
+    btn.textContent = "กำลังบันทึก...";
     const payload = {
       code:    machineCode.value,
       name:    machineName.value,
@@ -840,48 +871,27 @@ async function save() {
       tfin:    tfin.value,
       deliver: deliver.value,
       owner:   owner.value,
-      parts:   getParts()
+      parts:   getParts(),
+      image1:  url1,   // ← URL จาก ImgBB แทน base64
+      image2:  url2,
+      image3:  url3
     };
 
-    // รับ rowIndex กลับมาจาก GAS
-    const rowIndex = await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       const cbName = "cb_" + Date.now();
       const script = document.createElement("script");
 
       window[cbName] = function(res) {
         delete window[cbName];
         script.remove();
-        if (res && res.rowIndex) resolve(res.rowIndex);
-        else reject(new Error("No rowIndex returned"));
+        res.status === "ok" ? resolve() : reject(new Error(res.message));
       };
 
-      script.onerror = () => reject(new Error("Script load error"));
-      script.src = url + "?action=saveText&callback=" + cbName +
+      script.onerror = () => reject(new Error("Network error"));
+      script.src = url + "?action=save&callback=" + cbName +
                    "&data=" + encodeURIComponent(JSON.stringify(payload));
       document.body.appendChild(script);
     });
-
-    // ── STEP 2: ส่งรูปผ่าน POST พร้อม rowIndex ──
-    const imgFiles = [img1.files[0], img2.files[0], img3.files[0]];
-    const hasImage = imgFiles.some(f => f);
-
-    if (hasImage) {
-      const images = await Promise.all(
-        imgFiles.map(f => f ? resizeImage(f) : Promise.resolve(""))
-      );
-
-      const imgPayload = {
-        rowIndex: rowIndex,
-        image1: images[0] || "",
-        image2: images[1] || "",
-        image3: images[2] || ""
-      };
-
-      await fetch(url + "?action=saveImage", {
-        method: "POST",
-        body: JSON.stringify(imgPayload)
-      });
-    }
 
     alert("✅ บันทึกสำเร็จ");
     resetForm();
@@ -896,6 +906,9 @@ async function save() {
   }
 }
 
+
+
+  
 //   function getFilteredData
 
   function getFilteredData(){
