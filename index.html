@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App0000</title>
+<title>Maintenance UT TIK App</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
 body{background:#f4f6fb}
@@ -273,18 +273,18 @@ async function save() {
   const btn = document.querySelector(".btn");
   btn.disabled = true;
   try {
-    // อัปโหลดรูปไป ImgBB → ได้ URL กลับมา
+    // Step 1: อัปโหลดรูปไป ImgBB → ได้ URL
     const files = ["img1","img2","img3"].map(id => document.getElementById(id).files[0]);
-    const urls = [];
+    const imgbbUrls = [];
     for (let i = 0; i < 3; i++) {
       if (files[i]) {
-        setProgress(10 + i*20, "📷 อัปโหลดรูป " + (i+1) + "/3...");
-        urls.push(await uploadToImgBB(files[i]));
-      } else { urls.push(""); }
+        setProgress(10 + i*15, "📷 อัปโหลดรูป " + (i+1) + "/3...");
+        imgbbUrls.push(await uploadToImgBB(files[i]));
+      } else { imgbbUrls.push(""); }
     }
 
-    // ส่งข้อมูล + URL รูป ไป GAS ผ่าน JSONP
-    setProgress(75, "💾 บันทึกข้อมูล...");
+    // Step 2: บันทึก text + ImgBB URL ลง Sheet → ได้ rowIndex
+    setProgress(55, "💾 บันทึกข้อมูล...");
     const payload = {
       code:    document.getElementById("machineCode").value,
       name:    document.getElementById("machineName").value,
@@ -301,20 +301,41 @@ async function save() {
       deliver: document.getElementById("deliver").value,
       owner:   document.getElementById("owner").value,
       parts:   getParts(),
-      image1:  urls[0], image2: urls[1], image3: urls[2]
+      image1:  imgbbUrls[0], image2: imgbbUrls[1], image3: imgbbUrls[2]
     };
 
-    const result = await jsonpGet({ action:"save", data: JSON.stringify(payload) });
-    console.log("📩 GAS:", result);
-    if (!result || result.status !== "ok") throw new Error("GAS: " + JSON.stringify(result));
+    const r1 = await jsonpGet({ action:"save", data: JSON.stringify(payload) });
+    if (!r1 || r1.status !== "ok") throw new Error("save failed: " + JSON.stringify(r1));
+    const rowIndex = r1.rowIndex;
+    console.log("✅ saved row:", rowIndex);
+
+    // Step 3: ย้ายรูปจาก ImgBB → Drive ทีละรูป (col 19,20,21)
+    const cols = [19, 20, 21];
+    for (let i = 0; i < 3; i++) {
+      if (!imgbbUrls[i]) continue;
+      setProgress(65 + i*10, "☁️ ย้ายรูป " + (i+1) + " → Google Drive...");
+      try {
+        const r2 = await jsonpGet({
+          action:   "moveImage",
+          rowIndex: rowIndex,
+          col:      cols[i],
+          imgbbUrl: imgbbUrls[i]
+        });
+        console.log("✅ moveImage" + (i+1) + ":", r2);
+      } catch(imgErr) {
+        console.warn("⚠️ moveImage" + (i+1) + " failed:", imgErr.message);
+        // ไม่ stop — รูปยังดูได้จาก ImgBB URL เดิม
+      }
+    }
 
     setProgress(100, "✅ บันทึกสำเร็จ!");
     setTimeout(() => {
       hideProgress();
-      alert("✅ บันทึกสำเร็จ!");
+      alert("✅ บันทึกสำเร็จ!\nรูปภาพเก็บใน Google Drive แล้ว");
       resetForm();
       setTimeout(() => loadFromSheet(), 3000);
     }, 600);
+
   } catch(err) {
     hideProgress();
     alert("❌ " + err.message);
