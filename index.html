@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App555 </title>
+<title>Maintenance UT TIK App </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -741,10 +741,18 @@ parts.appendChild(row);
 
 function getParts(){
 let arr=[];
+
 document.querySelectorAll(".part-row").forEach(r=>{
-const i=r.querySelectorAll("input");
-arr.push({code:i[0].value,name:i[1].value,qty:i[2].value});
+  const row1 = r.querySelector(".row1").querySelectorAll("input");
+  const name = r.querySelector(".row2 input").value;
+
+  arr.push({
+    code: row1[0].value,
+    qty: row1[1].value,
+    name: name
+  });
 });
+
 return arr;
 }
 
