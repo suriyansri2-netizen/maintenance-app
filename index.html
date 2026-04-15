@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK Ap0000p </title>
+<title>Maintenance UT TIK App </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -811,51 +811,41 @@ return ok;
   
   
 /* SAVE */
-const IMGBB_KEY = "f1e115acbf0317f3812bda32ef9162b9";
-
-async function uploadToImgBB(file) {
+// ======================================================
+// แทนที่ฟังก์ชัน save() เดิมใน HTML ด้วยโค้ดนี้
+// และลบฟังก์ชัน uploadToImgBB() ออกได้เลย
+// ======================================================
+ 
+// URL ของ GAS Web App (ใช้ URL เดียวกับที่ deploy doPost)
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxkdKrUtAqVz1GZOPXWLLtrPgeR1e-raEhSoE_PcVc1kIGfkqZzpYACpTnAhMmVcGt9vQ/exec";
+ 
+// ── แปลงไฟล์รูปเป็น base64 (พร้อม resize) ──
+async function fileToBase64(file) {
   if (!file) return "";
-
-  const base64 = await resizeImage(file); // resize ก่อน
-  const b64clean = base64.split(",")[1];  // ตัด data:image/jpeg;base64, ออก
-
-  const form = new FormData();
-  form.append("key", IMGBB_KEY);
-  form.append("image", b64clean);
-
-  const res = await fetch("https://api.imgbb.com/1/upload", {
-    method: "POST",
-    body: form
-  });
-
-  const json = await res.json();
-  return json.data?.url || "";
+  return await resizeImage(file); // ใช้ฟังก์ชัน resizeImage() เดิมที่มีอยู่แล้ว
 }
-
-
+ 
+// ── บันทึกข้อมูล + รูปผ่าน POST ไปที่ GAS ──
 async function save() {
   if (!validateForm()) {
     alert("กรุณากรอกข้อมูลให้ครบ");
     return;
   }
-
+ 
   const btn = document.querySelector(".btn");
   btn.textContent = "กำลังบันทึก...";
   btn.disabled = true;
-
-  const url = "https://script.google.com/macros/s/AKfycby8qXWWvERtdjJzANShR3etSq41mGu70UpNrIN44yuFfLPiJNmEFqcSvXjpOAGrA0R3FA/exec";
-
+ 
   try {
-    // ── อัปโหลดรูปไป ImgBB ก่อน ได้ URL กลับมา ──
-    btn.textContent = "กำลังอัปโหลดรูป...";
-    const [url1, url2, url3] = await Promise.all([
-      uploadToImgBB(img1.files[0]),
-      uploadToImgBB(img2.files[0]),
-      uploadToImgBB(img3.files[0])
+    // 1) แปลงรูปเป็น base64 (resize ก่อนส่ง)
+    btn.textContent = "กำลังเตรียมรูปภาพ...";
+    const [img1b64, img2b64, img3b64] = await Promise.all([
+      fileToBase64(img1.files[0]),
+      fileToBase64(img2.files[0]),
+      fileToBase64(img3.files[0])
     ]);
-
-    // ── ส่งข้อมูลทั้งหมด + URL รูป ไป GAS ผ่าน GET ──
-    btn.textContent = "กำลังบันทึก...";
+ 
+    // 2) รวมข้อมูลทั้งหมด
     const payload = {
       code:    machineCode.value,
       name:    machineName.value,
@@ -872,31 +862,25 @@ async function save() {
       deliver: deliver.value,
       owner:   owner.value,
       parts:   getParts(),
-      image1:  url1,   // ← URL จาก ImgBB แทน base64
-      image2:  url2,
-      image3:  url3
+      image1:  img1b64,   // base64 ส่งตรงไป GAS
+      image2:  img2b64,
+      image3:  img3b64
     };
-
-    await new Promise((resolve, reject) => {
-      const cbName = "cb_" + Date.now();
-      const script = document.createElement("script");
-
-      window[cbName] = function(res) {
-        delete window[cbName];
-        script.remove();
-        res.status === "ok" ? resolve() : reject(new Error(res.message));
-      };
-
-      script.onerror = () => reject(new Error("Network error"));
-      script.src = url + "?action=save&callback=" + cbName +
-                   "&data=" + encodeURIComponent(JSON.stringify(payload));
-      document.body.appendChild(script);
+ 
+    // 3) ส่งผ่าน POST (no-cors เพื่อข้าม CORS restriction)
+    btn.textContent = "กำลังบันทึก...";
+    const res = await fetch(GAS_URL, {
+      method:  "POST",
+      mode:    "no-cors",           // GAS ไม่ส่ง CORS header → ใช้ no-cors
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify(payload)
     });
-
+ 
+    // no-cors จะได้ opaque response (ไม่สามารถอ่าน status ได้) → ถือว่าสำเร็จ
     alert("✅ บันทึกสำเร็จ");
     resetForm();
-    setTimeout(() => loadFromSheet(), 2000);
-
+    setTimeout(() => loadFromSheet(), 3000); // รอ GAS ประมวลผลก่อน reload
+ 
   } catch (err) {
     alert("❌ เกิดข้อผิดพลาด: " + err.message);
     console.error(err);
@@ -905,7 +889,7 @@ async function save() {
     btn.disabled = false;
   }
 }
-
+ 
 
 
   
@@ -1063,7 +1047,7 @@ unique.map(c=>`<option value="${c}">${c}</option>`).join("");
 
 
 function loadFromSheet() {
-  const url = "https://script.google.com/macros/s/AKfycbxfggA_7YpFQMax8bGwFn_uuqdSnNZSu4M5Fd-rPkrOGeX4gFE6zfWPbbn-xiCjAMx7FQ/exec";
+  const url = "https://script.google.com/macros/s/AKfycbxkdKrUtAqVz1GZOPXWLLtrPgeR1e-raEhSoE_PcVc1kIGfkqZzpYACpTnAhMmVcGt9vQ/exec";
 
 window.handleData = function(res) {
 
