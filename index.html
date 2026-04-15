@@ -734,8 +734,8 @@ return;
 let parts = getParts();
 
 let partCode = parts.map(p => p.code).join("\n");
-let partName = parts.map(p => p.name).join(" | ");
-let qty      = parts.map(p => p.qty).join(" | ");
+let partName = parts.map(p => p.name).join("\n");
+let qty      = parts.map(p => p.qty).join("\n");
 
 
 fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
