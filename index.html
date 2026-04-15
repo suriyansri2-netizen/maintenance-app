@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App555 </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -667,12 +667,19 @@ partsBox.style.display=hasPart.checked?"block":"none";
 function addPart(){
 const row=document.createElement("div");
 row.className="part-row";
+  
 row.innerHTML = `
-<input placeholder="Code">
-<input placeholder="Name">
-<input type="number" value="1">
-<button onclick="this.parentElement.remove()">x</button>
+<div class="row1">
+  <input placeholder="Code">
+  <input type="number" value="1">
+  <button onclick="this.parentElement.parentElement.remove()">X</button>
+</div>
+
+<div class="row2">
+  <input placeholder="Name">
+</div>
 `;
+  
 parts.appendChild(row);
 }
 
@@ -733,9 +740,9 @@ return;
  
 let parts = getParts();
 
-let partCode = parts.map(p => p.code).join("\n");
-let partName = parts.map(p => p.name).join("\n");
-let qty      = parts.map(p => p.qty).join("\n");
+let partCode = parts.map(p => p.code).join(" | ");
+let partName = parts.map(p => p.name).join(" | ");
+let qty      = parts.map(p => p.qty).join(" | ");
 
 
 fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
