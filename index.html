@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App 555 </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -846,19 +846,18 @@ async function save() {
     image3: images[2]
   };
 
-  const res = await fetch("https://script.google.com/macros/s/AKfycbxBOBAhAVeVst3Zu8JlhyiPCcgIGKE9TjxmWGOK7KNQ_6S3XVK4L9tekUrCBhlNA1kKPQ/exec", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+const url = "https://script.google.com/macros/s/AKfycbxBOBAhAVeVst3Zu8JlhyiPCcgIGKE9TjxmWGOK7KNQ_6S3XVK4L9tekUrCBhlNA1kKPQ/exec";
 
-  const result = await res.json();
+const script = document.createElement("script");
 
-  if(result.status === "ok"){
-    alert("บันทึกสำเร็จ");
-  } else {
-    alert(result.message);
-  }
+script.src =
+  url +
+  "?action=save&data=" +
+  encodeURIComponent(JSON.stringify(payload));
+
+document.body.appendChild(script);
+
+alert("บันทึกสำเร็จ");
 }
   
 /* RENDER */
