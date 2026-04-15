@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK Ap0000p </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -1163,6 +1163,42 @@ function resizeImage(file){
 
     reader.readAsDataURL(file);
   });
+}
+
+
+
+
+  function resetForm() {
+  // เครื่องจักร
+  document.getElementById("machineInput").value = "";
+  document.getElementById("machineCode").value = "";
+  document.getElementById("machineName").value = "";
+
+  // ข้อมูลหลัก
+  document.getElementById("date").value = "";
+  document.getElementById("sym").value = "";
+  document.getElementById("tstop").value = "";
+  document.getElementById("tstart").value = "";
+  document.getElementById("cause").value = "";
+  document.getElementById("act").value = "";
+  document.getElementById("datef").value = "";
+  document.getElementById("tfin").value = "";
+
+  // รูปภาพ
+  document.getElementById("img1").value = "";
+  document.getElementById("img2").value = "";
+  document.getElementById("img3").value = "";
+
+  // อะไหล่
+  document.getElementById("hasPart").checked = false;
+  document.getElementById("parts").innerHTML = "";
+  document.getElementById("partsBox").style.display = "none";
+
+  // reset select กลับ option แรก
+  document.getElementById("req").selectedIndex = 0;
+  document.getElementById("acc").selectedIndex = 0;
+  document.getElementById("deliver").selectedIndex = 0;
+  document.getElementById("owner").selectedIndex = 0;
 }
   
   
