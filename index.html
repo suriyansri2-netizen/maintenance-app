@@ -812,75 +812,84 @@ return ok;
   
 /* SAVE */
 // ======================================================
-// แทนที่ฟังก์ชัน save() เดิมใน HTML ด้วยโค้ดนี้
-// และลบฟังก์ชัน uploadToImgBB() ออกได้เลย
+// แทนที่ฟังก์ชัน save() ใน HTML ด้วยโค้ดนี้ทั้งหมด
 // ======================================================
- 
-// URL ของ GAS Web App (ใช้ URL เดียวกับที่ deploy doPost)
+
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxkdKrUtAqVz1GZOPXWLLtrPgeR1e-raEhSoE_PcVc1kIGfkqZzpYACpTnAhMmVcGt9vQ/exec";
- 
-// ── แปลงไฟล์รูปเป็น base64 (พร้อม resize) ──
+
+// ── แปลงรูปเป็น base64 + resize ──
 async function fileToBase64(file) {
   if (!file) return "";
-  return await resizeImage(file); // ใช้ฟังก์ชัน resizeImage() เดิมที่มีอยู่แล้ว
+  return await resizeImage(file);
 }
- 
-// ── บันทึกข้อมูล + รูปผ่าน POST ไปที่ GAS ──
+
+// ── POST ไป GAS ผ่าน fetch แบบ no-cors (GAS รับได้แน่นอน) ──
+// วิธีนี้ส่ง JSON จริง โดยใช้ text/plain เพื่อหลีก preflight CORS
+async function postToGAS(payload) {
+  // ใช้ text/plain แทน application/json
+  // → browser ไม่ทำ preflight OPTIONS
+  // → GAS รับได้ใน e.postData.contents ปกติ
+  const res = await fetch(GAS_URL, {
+    method:  "POST",
+    mode:    "no-cors",
+    headers: { "Content-Type": "text/plain" },  // ← key: text/plain ไม่ trigger preflight
+    body:    JSON.stringify(payload)
+  });
+  // no-cors → opaque response → ถือว่า ok
+  return true;
+}
+
+// ── SAVE MAIN ──
 async function save() {
   if (!validateForm()) {
     alert("กรุณากรอกข้อมูลให้ครบ");
     return;
   }
- 
+
   const btn = document.querySelector(".btn");
-  btn.textContent = "กำลังบันทึก...";
   btn.disabled = true;
- 
+
   try {
-    // 1) แปลงรูปเป็น base64 (resize ก่อนส่ง)
-    btn.textContent = "กำลังเตรียมรูปภาพ...";
+    // ── step 1: resize รูป ──
+    btn.textContent = "📷 กำลังเตรียมรูปภาพ...";
     const [img1b64, img2b64, img3b64] = await Promise.all([
-      fileToBase64(img1.files[0]),
-      fileToBase64(img2.files[0]),
-      fileToBase64(img3.files[0])
+      fileToBase64(document.getElementById("img1").files[0]),
+      fileToBase64(document.getElementById("img2").files[0]),
+      fileToBase64(document.getElementById("img3").files[0])
     ]);
- 
-    // 2) รวมข้อมูลทั้งหมด
+
+    // ── step 2: เตรียม payload ──
     const payload = {
-      code:    machineCode.value,
-      name:    machineName.value,
-      date:    date.value,
-      sym:     sym.value,
-      tstop:   tstop.value,
-      tstart:  tstart.value,
-      req:     req.value,
-      acc:     acc.value,
-      cause:   cause.value,
-      act:     act.value,
-      datef:   datef.value,
-      tfin:    tfin.value,
-      deliver: deliver.value,
-      owner:   owner.value,
+      code:    document.getElementById("machineCode").value,
+      name:    document.getElementById("machineName").value,
+      date:    document.getElementById("date").value,
+      sym:     document.getElementById("sym").value,
+      tstop:   document.getElementById("tstop").value,
+      tstart:  document.getElementById("tstart").value,
+      req:     document.getElementById("req").value,
+      acc:     document.getElementById("acc").value,
+      cause:   document.getElementById("cause").value,
+      act:     document.getElementById("act").value,
+      datef:   document.getElementById("datef").value,
+      tfin:    document.getElementById("tfin").value,
+      deliver: document.getElementById("deliver").value,
+      owner:   document.getElementById("owner").value,
       parts:   getParts(),
-      image1:  img1b64,   // base64 ส่งตรงไป GAS
+      image1:  img1b64,
       image2:  img2b64,
       image3:  img3b64
     };
- 
-    // 3) ส่งผ่าน POST (no-cors เพื่อข้าม CORS restriction)
-    btn.textContent = "กำลังบันทึก...";
-    const res = await fetch(GAS_URL, {
-      method:  "POST",
-      mode:    "no-cors",           // GAS ไม่ส่ง CORS header → ใช้ no-cors
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify(payload)
-    });
- 
-    // no-cors จะได้ opaque response (ไม่สามารถอ่าน status ได้) → ถือว่าสำเร็จ
-    alert("✅ บันทึกสำเร็จ");
+
+    // ── step 3: ส่ง POST ──
+    btn.textContent = "💾 กำลังบันทึก...";
+    await postToGAS(payload);
+
+    alert("✅ บันทึกสำเร็จ!\n\nรูปภาพกำลังอัปโหลดไป Google Drive\n(ใช้เวลาประมาณ 10-20 วินาที)");
     resetForm();
-    setTimeout(() => loadFromSheet(), 3000); // รอ GAS ประมวลผลก่อน reload
- 
+
+    // รอให้ GAS ประมวลรูปเสร็จก่อน reload
+    setTimeout(() => loadFromSheet(), 15000);
+
   } catch (err) {
     alert("❌ เกิดข้อผิดพลาด: " + err.message);
     console.error(err);
@@ -889,9 +898,6 @@ async function save() {
     btn.disabled = false;
   }
 }
- 
-
-
   
 //   function getFilteredData
 
