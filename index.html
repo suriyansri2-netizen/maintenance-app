@@ -173,42 +173,44 @@ th:nth-child(4), td:nth-child(4){min-width:200px;}   /* อาการ */
 th:nth-child(9), td:nth-child(9){min-width:200px;}   /* สาเหตุ */
 th:nth-child(10), td:nth-child(10){min-width:220px;} /* การแก้ไข */
 
-
-
-
-  /* PART STYLE เดิมของคุณ */
-.part-row{
-  display: grid;
-  grid-template-columns: 140px 1fr 100px 40px;
-}
-
-/* ===== เพิ่มใหม่ตรงนี้ ===== */
 .part-row{
   display: flex;
   flex-direction: column;
   gap: 6px;
-  padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 8px;
-  background: #fafbff;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
 }
 
+/* แถวบน: Code + Qty + X */
 .row1{
   display: grid;
   grid-template-columns: 1fr 80px 40px;
   gap: 6px;
+  width: 100%;
   align-items: center;
 }
 
+/* แถวล่าง: Name เต็มจอ */
 .row2{
-  display: block;
+  width: 100%;
 }
 
+/* input เต็มความกว้าง */
 .row1 input,
 .row2 input{
   width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 6px;
   padding: 6px;
   font-size: 12px;
+  box-sizing: border-box;
+}
+
+/* ชิดซ้ายทั้งหมด */
+.part-row,
+.row1,
+.row2{
+  text-align: left;
 }
 
   
@@ -705,19 +707,17 @@ partsBox.style.display=hasPart.checked?"block":"none";
 function addPart(){
 const row=document.createElement("div");
 row.className="part-row";
-  
 row.innerHTML = `
-<div class="row1">
-  <input placeholder="Code">
-  <input type="number" value="1">
-  <button onclick="this.parentElement.parentElement.remove()">X</button>
-</div>
+  <div class="row1">
+    <input placeholder="Code">
+    <input type="number" value="1">
+    <button onclick="this.parentElement.parentElement.remove()">X</button>
+  </div>
 
-<div class="row2">
-  <input placeholder="Name">
-</div>
+  <div class="row2">
+    <input placeholder="Name">
+  </div>
 `;
-  
 parts.appendChild(row);
 }
 
