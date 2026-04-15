@@ -811,79 +811,40 @@ return ok;
   
   
 /* SAVE */
-async function save(){
-
-  try {
-
-    console.log("🔥 SAVE CLICKED");
-
-    // 1. validate
-    if(!validateForm()){
-      alert("❌ กรุณากรอกข้อมูลให้ครบ");
-      return;
-    }
-
-    // 2. parts
-    let partList = getParts();
-
-    let payload = {
-      code: document.getElementById("machineCode").value,
-      name: document.getElementById("machineName").value,
-      date: document.getElementById("date").value,
-      sym: document.getElementById("sym").value,
-      tstop: document.getElementById("tstop").value,
-      tstart: document.getElementById("tstart").value,
-      req: document.getElementById("req").value,
-      acc: document.getElementById("acc").value,
-      cause: document.getElementById("cause").value,
-      act: document.getElementById("act").value,
-      datef: document.getElementById("datef").value,
-      tfin: document.getElementById("tfin").value,
-      deliver: document.getElementById("deliver").value,
-      owner: document.getElementById("owner").value,
-
-      partCode: partList.map(p => p.code).join(" | "),
-      partName: partList.map(p => p.name).join(" | "),
-      qty: partList.map(p => p.qty).join(" | ")
-    };
-
-    console.log("📦 PAYLOAD:", payload);
-
-    // 3. images (optional)
-    const img1 = document.getElementById("img1").files[0];
-    const img2 = document.getElementById("img2").files[0];
-    const img3 = document.getElementById("img3").files[0];
-
-    if(img1) payload.image1 = await toBase64(img1);
-    if(img2) payload.image2 = await toBase64(img2);
-    if(img3) payload.image3 = await toBase64(img3);
-
-    // 4. send to GAS (IMPORTANT FIX)
-    const url = "https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec";
-
-    const res = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const text = await res.text();
-    console.log("📩 RESPONSE:", text);
-
-    // 5. check result
-    if(!res.ok){
-      throw new Error("Server error");
-    }
-
-    alert("✅ บันทึกสำเร็จ");
-
-  } catch(err){
-    console.error("❌ SAVE ERROR:", err);
-    alert("❌ Save ไม่สำเร็จ: " + err.message);
+function save() {
+  if(!validateForm()){
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
   }
 
+  let parts = getParts();
+
+  const payload = {
+    code: machineCode.value,
+    name: machineName.value,
+    date: date.value,
+    sym: sym.value,
+    tstop: tstop.value,
+    tstart: tstart.value,
+    req: req.value,
+    acc: acc.value,
+    cause: cause.value,
+    act: act.value,
+    datef: datef.value,
+    tfin: tfin.value,
+    deliver: deliver.value,
+    owner: owner.value,
+    parts: parts
+  };
+
+  google.script.run
+    .withSuccessHandler(() => {
+      alert("บันทึกสำเร็จ");
+    })
+    .withFailureHandler(err => {
+      alert("Error: " + err.message);
+    })
+    .saveData(payload);
 }
 
 
