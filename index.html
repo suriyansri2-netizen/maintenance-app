@@ -3,33 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App 0000</title>
+<title>Maintenance UT TIK App0000</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
 body{background:#f4f6fb}
 .container{max-width:1000px;margin:auto;padding:12px}
 .header{position:sticky;top:0;z-index:99;background:#ffffffcc;backdrop-filter:blur(10px);padding:10px;border-radius:12px;box-shadow:0 3px 10px rgba(0,0,0,0.05)}
-.title{font-size:18px;font-weight:700}
-.sub{font-size:12px;color:#777}
+.title{font-size:18px;font-weight:700}.sub{font-size:12px;color:#777}
 .tab-bar{display:flex;gap:6px;margin-top:10px}
 .tab{flex:1;padding:8px;border:none;border-radius:8px;background:#eef1f7;font-size:12px;cursor:pointer}
 .tab.active{background:#4f46e5;color:#fff}
 .card{background:#fff;border-radius:12px;padding:12px;margin-top:10px;box-shadow:0 3px 12px rgba(0,0,0,0.05)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.fg{display:flex;flex-direction:column}
-.fg.full{grid-column:1/-1}
+.fg{display:flex;flex-direction:column}.fg.full{grid-column:1/-1}
 label{font-size:11px;margin-bottom:2px;color:#555}
 input,textarea{padding:7px;border-radius:6px;border:1px solid #ddd;font-size:12px;background:#fafbff}
 textarea{min-height:50px}
 .dd{position:absolute;background:#fff;border:1px solid #ddd;width:100%;max-height:300px;overflow-y:auto;display:none;z-index:999;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,0.15)}
-.dd div{padding:6px;font-size:12px;cursor:pointer}
-.dd div:hover{background:#eee}
+.dd div{padding:6px;font-size:12px;cursor:pointer}.dd div:hover{background:#eee}
 .btn{margin-top:10px;padding:10px;background:#4f46e5;color:#fff;border:none;border-radius:8px;cursor:pointer;width:100%;font-size:13px}
 .small-btn{padding:4px 6px;font-size:10px;border:none;border-radius:6px;cursor:pointer}
-.del{background:#ef4444;color:#fff}
-.export{background:#10b981;color:#fff;margin-bottom:8px}
-.sec{display:none}
-.sec.active{display:block}
+.del{background:#ef4444;color:#fff}.export{background:#10b981;color:#fff;margin-bottom:8px}
+.sec{display:none}.sec.active{display:block}
 @media(max-width:600px){.form-grid{grid-template-columns:1fr}}
 .error{border:1px solid #ef4444 !important;background:#fff1f2}
 #machineInput{width:100%;padding:12px;font-size:15px;border-radius:10px;border:2px solid #4f46e5;outline:none}
@@ -52,14 +47,14 @@ th:nth-child(10),td:nth-child(10){min-width:220px}
 select{width:100%;padding:7px;border-radius:6px;border:1px solid #ddd;font-size:12px;background:#fafbff;box-sizing:border-box}
 select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,229,0.15)}
 #progressWrap{display:none;margin-top:8px}
-#progressBar{height:6px;background:#4f46e5;border-radius:4px;width:0%;transition:width 0.3s}
+#progressTrack{background:#e5e7eb;border-radius:4px;height:8px}
+#progressBar{height:8px;background:#4f46e5;border-radius:4px;width:0%;transition:width 0.4s}
 #progressLabel{font-size:11px;color:#555;margin-top:4px;text-align:center}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 <div class="container">
-
 <div class="header">
   <div class="title">Maintenance UT TIK App</div>
   <div class="sub">Factory Utility System</div>
@@ -68,63 +63,48 @@ select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,2
     <button class="tab" onclick="switchTab('history',this)">History</button>
   </div>
 </div>
-
 <div class="card">
-
-<!-- FORM -->
 <div id="form" class="sec active">
 <div class="form-grid">
-  <div class="fg full">
-    <label>ค้นหารายชื่อเครื่องจักร</label>
-    <div style="position:relative">
-      <input id="machineInput" oninput="searchMachine(this.value)">
-      <div id="dropdown" class="dd"></div>
-    </div>
+  <div class="fg full"><label>ค้นหารายชื่อเครื่องจักร</label>
+    <div style="position:relative"><input id="machineInput" oninput="searchMachine(this.value)"><div id="dropdown" class="dd"></div></div>
   </div>
   <div class="fg"><label>รหัสเครื่องจักร</label><input id="machineCode"></div>
   <div class="fg"><label>ชื่อเครื่องจักร</label><input id="machineName"></div>
   <div class="fg"><label>วันที่</label><input id="date" type="date"></div>
   <div class="fg full"><label>อาการ</label><textarea id="sym"></textarea></div>
-  <div class="fg"><label>เวลาหยุด</label><input id="tstop" type="time" step="60" lang="en-GB"></div>
-  <div class="fg"><label>เวลาเริ่ม</label><input id="tstart" type="time" step="60" lang="en-GB"></div>
+  <div class="fg"><label>เวลาหยุด</label><input id="tstop" type="time" step="60"></div>
+  <div class="fg"><label>เวลาเริ่ม</label><input id="tstart" type="time" step="60"></div>
   <div class="fg"><label>ผู้แจ้ง</label><select id="req"></select></div>
   <div class="fg"><label>ผู้รับแจ้ง</label><select id="acc"></select></div>
   <div class="fg full"><label>สาเหตุที่เป็นไปได้</label><textarea id="cause"></textarea></div>
   <div class="fg full"><label>ดำเนินการแก้ไข</label><textarea id="act"></textarea></div>
   <div class="fg"><label>วันที่เสร็จ</label><input id="datef" type="date"></div>
-  <div class="fg"><label>เวลาเสร็จ</label><input id="tfin" type="time" step="60" lang="en-GB"></div>
+  <div class="fg"><label>เวลาเสร็จ</label><input id="tfin" type="time" step="60"></div>
   <div class="fg"><label>ผู้ส่งเครื่อง</label><select id="deliver"></select></div>
   <div class="fg"><label>ผู้รับเครื่อง</label><select id="owner"></select></div>
-  <div class="fg full">
-    <label>รูปภาพ (สูงสุด 3 รูป)</label>
+  <div class="fg full"><label>รูปภาพ (สูงสุด 3 รูป)</label>
     <input type="file" id="img1" accept="image/*">
     <input type="file" id="img2" accept="image/*">
     <input type="file" id="img3" accept="image/*">
   </div>
-  <div class="fg full">
-    <label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีการเปลี่ยนอะไหล่</label>
-  </div>
+  <div class="fg full"><label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีการเปลี่ยนอะไหล่</label></div>
   <div id="partsBox" class="fg full" style="display:none">
     <div id="parts"></div>
     <button type="button" onclick="addPart()">+ เพิ่มอะไหล่</button>
   </div>
 </div>
-<div id="progressWrap">
-  <div id="progressBar"></div>
-  <div id="progressLabel"></div>
-</div>
+<div id="progressWrap"><div id="progressTrack"><div id="progressBar"></div></div><div id="progressLabel"></div></div>
 <button class="btn" onclick="save()">SAVE</button>
 </div>
 
-<!-- HISTORY -->
 <div id="history" class="sec">
 <div class="history-toolbar">
   <input id="searchHistory" placeholder="🔍 ค้นหาประวัติ..." oninput="render()">
   <select id="filterMachine" onchange="render()"><option value="">📊 ทุกเครื่องจักร</option></select>
   <button class="export" onclick="exportExcel()">Export Excel</button>
 </div>
-<div class="table-wrap">
-<table>
+<div class="table-wrap"><table>
 <thead><tr>
   <th>รหัสเครื่องจักร</th><th>ชื่อเครื่องจักร</th><th>วันที่แจ้ง</th>
   <th>อาการ</th><th>เวลาหยุด</th><th>เวลาเริ่ม</th>
@@ -133,342 +113,80 @@ select:focus{outline:none;border-color:#4f46e5;box-shadow:0 0 0 3px rgba(79,70,2
   <th>รหัสอะไหล่</th><th>ชื่ออะไหล่</th><th>จำนวน</th><th>รูป</th><th>ลบ</th>
 </tr></thead>
 <tbody id="tbHistory"></tbody>
-</table>
+</table></div>
 </div>
-</div>
-
-</div>
-</div>
+</div></div>
 
 <script>
-// ══════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxkdKrUtAqVz1GZOPXWLLtrPgeR1e-raEhSoE_PcVc1kIGfkqZzpYACpTnAhMmVcGt9vQ/exec";
+const GAS_URL   = "https://script.google.com/macros/s/AKfycbxkdKrUtAqVz1GZOPXWLLtrPgeR1e-raEhSoE_PcVc1kIGfkqZzpYACpTnAhMmVcGt9vQ/exec";
+const IMGBB_KEY = "f1e115acbf0317f3812bda32ef9162b9";
 
-// ══════════════════════════════════════════
-// USERS
-// ══════════════════════════════════════════
-const USERS = [
-  "UT TIK TEAM","VENDOR - SUPPLIER",
-  "CHANIN D.","WORAPOL T.","THANAWAT S.","WEERAPONG S.",
-  "OPHAT D.","SANCHAI M.","WIRUT P.","ANUCHA","PHACHAUN J.",
-  "PICHET P.","SURIYAN S","MILL","DIP","W/H"
-];
+const USERS = ["UT TIK TEAM","VENDOR - SUPPLIER","CHANIN D.","WORAPOL T.","THANAWAT S.",
+  "WEERAPONG S.","OPHAT D.","SANCHAI M.","WIRUT P.","ANUCHA","PHACHAUN J.",
+  "PICHET P.","SURIYAN S","MILL","DIP","W/H"];
 
-// ══════════════════════════════════════════
-// MACHINES
-// ══════════════════════════════════════════
 const MACHINES = [
-{"code":"03-01-01","name":"STATION__NGD__GAS"},
-{"code":"03-01-02","name":"LINE__PIPEING__GAS__FOR__DIP"},
-{"code":"03-01-03","name":"LINE__PIPEING__GAS__FOR_CANTEEN"},
-{"code":"03-02-01","name":"JOCKY_PUMP_1500_GPM"},
-{"code":"03-02-02","name":"ELECTRIC_PUMP_1500_GPM"},
-{"code":"03-02-03","name":"ENGINE_DIESEL__1500_GPM"},
-{"code":"03-02-04","name":"RAW_WATER_LEVEL_CONTROL"},
-{"code":"03-02-05","name":"RAW_WATER__PUMP_No.1_(Fire_pump_area)"},
-{"code":"03-02-06","name":"RAW_WATER__PUMP_No.2_(soft_area)"},
-{"code":"03-02-07","name":"RAW_WATER__PUMP_No.3_(Soft_area)"},
-{"code":"03-26-01","name":"FIRE_ALARM_SYSTEM__LFAP_97_FLOOR_2_ALL_CONTROL"},
-{"code":"03-26-02","name":"FIRE_ALARM_SYSTEM__LFAP_10_PROTEC_T_RAW_MATT."},
-{"code":"03-26-03","name":"FIRE_ALARM_SYSTEM__LFAP_20_PROTECT_G/F,W/H_"},
-{"code":"03-26-04","name":"Fire_suppression_system__FM_200_for_switch_gear"},
-{"code":"03-26-05","name":"Fire_suppression_system__FM_200_for_server_room"},
-{"code":"03-27-01","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._1_(Raw.Matt)"},
-{"code":"03-27-02","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._2_(Open_W/H)"},
-{"code":"03-27-03","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._3(Work_shop_G/F)"},
-{"code":"03-27-04","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._4(W/H_spare_part)"},
-{"code":"03-27-05","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._5(W/H_export_zone_1)"},
-{"code":"03-27-06","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._6_(W/H_Export_zone_2)"},
-{"code":"03-27-07","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._7_(Dip_Prepe)"},
-{"code":"03-27-08","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._8_(Dip_unit_floor_9)"},
-{"code":"03-27-09","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No._9(Chemical_room)"},
-{"code":"03-27-10","name":"WET_PIPE__ALARM__VALVE_FOR_SPRINKLER_No.10(Work_shop,control_mill_WV)"},
-{"code":"03-27-11","name":"WET_PIPE_ALARM_VALVE_FOR_SPRINKLER_No.11(Work_shop,_control_mill_twist)"},
-{"code":"03-28-01","name":"SOFTENER_WATER_SYSTEM"},
-{"code":"03-29-01","name":"JOCKY_PUMP_1000_GPM"},
-{"code":"03-29-02","name":"ELECTRIC_PUMP_1000_GPM"},
-{"code":"03-29-03","name":"ENGINE_DIESEL_1000_GPM"},
-{"code":"03-03-01","name":"AIR_COMPRESSOR_No.1"},
-{"code":"03-03-02","name":"AIR_COMPRESSOR_No.2"},
-{"code":"03-03-03","name":"AIR_COMPRESSOR_No.3"},
-{"code":"03-03-04","name":"AIR_COMPRESSOR_No.4"},
-{"code":"03-03-05","name":"AIR_DRYER_No.1"},
-{"code":"03-03-06","name":"AIR_DRYER_No.2"},
-{"code":"03-03-07","name":"AIR_DRYER_No.3"},
-{"code":"03-03-08","name":"AIR_STORAGE_TANK_No.1_"},
-{"code":"03-03-09","name":"AIR_STORAGE_TANK_No.2"},
-{"code":"03-03-10","name":"PRE_FILTER_AIR_No.1"},
-{"code":"03-03-11","name":"FINAL_FILTER_AIR_No.1"},
-{"code":"03-03-12","name":"FINAL_FILTER_AIR_No.2"},
-{"code":"03-04-01","name":"CARRIER_CHILLER_30HR_No.1"},
-{"code":"03-04-02","name":"CARRIER_CHILLER_30XW-V_No.2"},
-{"code":"03-04-03","name":"CONDENSER_WATER_PUMP_No.3"},
-{"code":"03-04-04","name":"CONDENSER_WATER_PUMP_No.4"},
-{"code":"03-04-05","name":"CHILLED_WATER_PUMP_No.7"},
-{"code":"03-04-06","name":"CHILLED_WATER_PUMP_No.8"},
-{"code":"03-04-07","name":"COOLING_TOWER_No.7"},
-{"code":"03-04-08","name":"COOLING_TOWER_No.8"},
-{"code":"03-04-09","name":"SOFT_WATER_PUMP_No.1"},
-{"code":"03-04-10","name":"SOFT_WATER_PUMP_No.2"},
-{"code":"03-04-21","name":"DEMIN_WATER_MACHINE_"},
-{"code":"03-04-22","name":"RO_WATER_MACHINE_"},
-{"code":"03-04-11","name":"COOLING_WATER_PUMP_No.5"},
-{"code":"03-04-12","name":"COOLING_WATER_PUMP_No.6"},
-{"code":"03-04-13","name":"COOLING_WATER_PUMP_No.7"},
-{"code":"03-04-14","name":"COOLING__RETURN_PUMP_No.8"},
-{"code":"03-04-15","name":"COOLING__RETURN_PUMP_No.9"},
-{"code":"03-04-16","name":"COOLING__RETURN_PUMP_No.10"},
-{"code":"03-04-17","name":"COOLING_TOWER_No.9"},
-{"code":"03-04-18","name":"COOLING_TOWER_No.10"},
-{"code":"03-04-19","name":"CHILLED_WATER_PUMP_D/U_TANK1,2_No.1"},
-{"code":"03-04-20","name":"CHILLED_WATER_PUMP_D/U_TANK1,2_No.2"},
-{"code":"03-05-01","name":"YORK_CHILLER-YKDFDFQ75CLF_No.1"},
-{"code":"03-05-02","name":"YORK_CHILLER-YKDFDFQ75CLF_No.2"},
-{"code":"03-05-03","name":"YORK_CHILLER-YKDFDFQ75CLF_No.3"},
-{"code":"03-05-04","name":"YORK_CHILLER-YKDFDFQ75CLF_No.4"},
+{"code":"03-01-01","name":"STATION__NGD__GAS"},{"code":"03-01-02","name":"LINE__PIPEING__GAS__FOR__DIP"},
+{"code":"03-01-03","name":"LINE__PIPEING__GAS__FOR_CANTEEN"},{"code":"03-02-01","name":"JOCKY_PUMP_1500_GPM"},
+{"code":"03-02-02","name":"ELECTRIC_PUMP_1500_GPM"},{"code":"03-02-03","name":"ENGINE_DIESEL__1500_GPM"},
+{"code":"03-02-04","name":"RAW_WATER_LEVEL_CONTROL"},{"code":"03-02-05","name":"RAW_WATER__PUMP_No.1_(Fire_pump_area)"},
+{"code":"03-02-06","name":"RAW_WATER__PUMP_No.2_(soft_area)"},{"code":"03-02-07","name":"RAW_WATER__PUMP_No.3_(Soft_area)"},
+{"code":"03-26-01","name":"FIRE_ALARM_SYSTEM__LFAP_97_FLOOR_2_ALL_CONTROL"},{"code":"03-26-04","name":"Fire_suppression_system__FM_200_for_switch_gear"},
+{"code":"03-26-05","name":"Fire_suppression_system__FM_200_for_server_room"},{"code":"03-28-01","name":"SOFTENER_WATER_SYSTEM"},
+{"code":"03-29-01","name":"JOCKY_PUMP_1000_GPM"},{"code":"03-29-02","name":"ELECTRIC_PUMP_1000_GPM"},{"code":"03-29-03","name":"ENGINE_DIESEL_1000_GPM"},
+{"code":"03-03-01","name":"AIR_COMPRESSOR_No.1"},{"code":"03-03-02","name":"AIR_COMPRESSOR_No.2"},
+{"code":"03-03-03","name":"AIR_COMPRESSOR_No.3"},{"code":"03-03-04","name":"AIR_COMPRESSOR_No.4"},
+{"code":"03-03-05","name":"AIR_DRYER_No.1"},{"code":"03-03-06","name":"AIR_DRYER_No.2"},{"code":"03-03-07","name":"AIR_DRYER_No.3"},
+{"code":"03-03-08","name":"AIR_STORAGE_TANK_No.1_"},{"code":"03-03-09","name":"AIR_STORAGE_TANK_No.2"},
+{"code":"03-04-01","name":"CARRIER_CHILLER_30HR_No.1"},{"code":"03-04-02","name":"CARRIER_CHILLER_30XW-V_No.2"},
+{"code":"03-04-05","name":"CHILLED_WATER_PUMP_No.7"},{"code":"03-04-06","name":"CHILLED_WATER_PUMP_No.8"},
+{"code":"03-04-07","name":"COOLING_TOWER_No.7"},{"code":"03-04-08","name":"COOLING_TOWER_No.8"},
+{"code":"03-04-21","name":"DEMIN_WATER_MACHINE_"},{"code":"03-04-22","name":"RO_WATER_MACHINE_"},
+{"code":"03-05-01","name":"YORK_CHILLER-YKDFDFQ75CLF_No.1"},{"code":"03-05-02","name":"YORK_CHILLER-YKDFDFQ75CLF_No.2"},
+{"code":"03-05-03","name":"YORK_CHILLER-YKDFDFQ75CLF_No.3"},{"code":"03-05-04","name":"YORK_CHILLER-YKDFDFQ75CLF_No.4"},
 {"code":"03-05-05","name":"YORK_CHILLER-YKDFDFQ75CLF_No.5"},
-{"code":"03-05-06","name":"CHILLED_PRIMARY_PUMP_No.2"},
-{"code":"03-05-07","name":"CHILLED_PRIMARY_PUMP_No.3"},
-{"code":"03-05-08","name":"CHILLED_PRIMARY_PUMP_No.4"},
-{"code":"03-05-09","name":"CHILLED_PRIMARY_PUMP_No.5"},
-{"code":"03-05-11","name":"CHILLED_SUPPLY_PUMP_No.1"},
-{"code":"03-05-12","name":"CHILLED_SUPPLY_PUMP_No.2"},
-{"code":"03-05-13","name":"CHILLED_SUPPLY_PUMP_No.3"},
-{"code":"03-05-14","name":"CHILLED_SUPPLY_PUMP_No.4"},
-{"code":"03-05-15","name":"CHILLED_SUPPLY_PUMP_No.5"},
-{"code":"03-05-16","name":"CHILLED_SUPPLY_PUMP_No.6"},
-{"code":"03-05-17","name":"CHILLED_SUPPLY_PUMP_No.7"},
-{"code":"03-05-18","name":"CHILLED_RETURN_PUMP_No.1"},
-{"code":"03-05-19","name":"CHILLED_RETURN_PUMP_No.2"},
-{"code":"03-05-20","name":"CHILLED_RETURN_PUMP_No.3"},
-{"code":"03-05-21","name":"CONDENSER_WATER_PUMP_No.1"},
-{"code":"03-05-22","name":"CONDENSER_WATER_PUMP_No.2"},
-{"code":"03-05-23","name":"CONDENSER_WATER_PUMP_No.3"},
-{"code":"03-05-24","name":"CONDENSER_WATER_PUMP_No.4"},
-{"code":"03-05-25","name":"CONDENSER_WATER_PUMP_No.5"},
-{"code":"03-05-26","name":"COOLING_TOWER_No.1"},
-{"code":"03-05-27","name":"COOLING_TOWER_No.2"},
-{"code":"03-05-28","name":"COOLING_TOWER_No.3"},
-{"code":"03-05-29","name":"COOLING_TOWER_No.4"},
-{"code":"03-05-30","name":"COOLING_TOWER_No.5"},
-{"code":"03-05-32","name":"COOLING_TOWER_No.6"},
-{"code":"03-05-31","name":"WASTE_WATER_FILTER_(_Reverse_Osmosis)"},
-{"code":"03-06-01","name":"AIR__CONDITION__LUWA_No.1"},
-{"code":"03-06-02","name":"AIR__CONDITION__LUWA_No.2"},
-{"code":"03-06-03","name":"AIR__CONDITION__LUWA_No.3"},
-{"code":"03-06-04","name":"AIR__CONDITION__LUWA_No.4"},
-{"code":"03-06-05","name":"AIR__CONDITION__LUWA_No.5"},
-{"code":"03-06-06","name":"AIR__CONDITION__LUWA_No.6"},
-{"code":"03-06-07","name":"AIR__CONDITION__LUWA_No.7"},
-{"code":"03-06-08","name":"AIR__CONDITION__LUWA_No.8"},
-{"code":"03-06-09","name":"AIR__CONDITION__LUWA_No.9"},
-{"code":"03-07-01","name":"CRANE_3.2_TONE_No.1"},
-{"code":"03-07-02","name":"CRANE_5_TONE_No.2"},
-{"code":"03-07-03","name":"CRANE_3.2_TONE_No.3"},
-{"code":"03-07-04","name":"MONO_RAIL_HOIST_3_TONE__No.4"},
-{"code":"03-07-05","name":"MONO_RAIL_HOIST_3_TONE__No.5"},
-{"code":"03-08-02","name":"FORK_LIFT_TOYOTA_DEISEL_(2.5_TONS)_W/H_No.5"},
-{"code":"03-08-03","name":"FORK_LIFT_TOYOTA_GAS_(2.5_TONS)_W/H_No.1"},
-{"code":"03-08-04","name":"FORK_LIFT_TOYOTA_GAS__(2.5_TONS)_MILL_No.2"},
-{"code":"03-08-05","name":"FORK_LIFT_TOYOTA_GAS__(2.5_TONS)_W/H_No.3"},
-{"code":"03-08-06","name":"FORK_LIFT_TOYOTA_GAS__(2.5_TONS)_MILL_No.4"},
-{"code":"03-08-07","name":"FORK_LIFT_TOYOTA_DESEL__(4.5TONS)_W/H_No.6"},
-{"code":"03-08-08","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.1"},
-{"code":"03-08-09","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.2"},
-{"code":"03-08-10","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.3"},
-{"code":"03-08-11","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.4"},
-{"code":"03-08-12","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.5"},
-{"code":"03-08-13","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.6"},
-{"code":"03-08-14","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.7"},
-{"code":"03-08-15","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.8"},
-{"code":"03-08-16","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.9"},
-{"code":"03-08-17","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.10"},
-{"code":"03-08-18","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.11"},
-{"code":"03-08-19","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.12"},
-{"code":"03-08-20","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.13"},
-{"code":"03-08-21","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.14"},
-{"code":"03-08-22","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.15"},
-{"code":"03-08-23","name":"ELECTRIC_ORDER_PICKER_TRUCK_No.16"},
-{"code":"03-08-24","name":"ELECTRIC_ORDER_PICKER_TRUCK_No.17"},
-{"code":"03-08-25","name":"ELECTRIC_ORDER_PICKER_TRUCK_No.18"},
-{"code":"03-08-26","name":"ELECTRIC_ORDER_PICKER_TRUCK_No.19"},
-{"code":"03-08-27","name":"ELECTRIC_SCISSOR_LIFT_HAULOTTE"},
-{"code":"03-08-28","name":"ELECTRIC_TRUCK_DROP_FABRIC"},
-{"code":"03-08-29","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.20"},
-{"code":"03-08-30","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.21"},
-{"code":"03-08-31","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.22"},
-{"code":"03-08-32","name":"FORK_LIFT_SUMITOMO_GAS_(2.5_TONS)_W/H_No.7"},
-{"code":"03-08-33","name":"FORK_LIFT_SUMITOMO_GAS_(2.5_TONS)_W/H_No.8"},
-{"code":"03-08-34","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.23"},
-{"code":"03-08-35","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.24"},
-{"code":"03-08-36","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.25"},
+{"code":"03-06-01","name":"AIR__CONDITION__LUWA_No.1"},{"code":"03-06-02","name":"AIR__CONDITION__LUWA_No.2"},
+{"code":"03-06-03","name":"AIR__CONDITION__LUWA_No.3"},{"code":"03-06-04","name":"AIR__CONDITION__LUWA_No.4"},
+{"code":"03-06-05","name":"AIR__CONDITION__LUWA_No.5"},{"code":"03-06-06","name":"AIR__CONDITION__LUWA_No.6"},
+{"code":"03-06-07","name":"AIR__CONDITION__LUWA_No.7"},{"code":"03-06-08","name":"AIR__CONDITION__LUWA_No.8"},{"code":"03-06-09","name":"AIR__CONDITION__LUWA_No.9"},
+{"code":"03-07-01","name":"CRANE_3.2_TONE_No.1"},{"code":"03-07-02","name":"CRANE_5_TONE_No.2"},
+{"code":"03-07-03","name":"CRANE_3.2_TONE_No.3"},{"code":"03-07-04","name":"MONO_RAIL_HOIST_3_TONE__No.4"},
+{"code":"03-08-02","name":"FORK_LIFT_TOYOTA_DEISEL_(2.5_TONS)_W/H_No.5"},{"code":"03-08-03","name":"FORK_LIFT_TOYOTA_GAS_(2.5_TONS)_W/H_No.1"},
+{"code":"03-08-04","name":"FORK_LIFT_TOYOTA_GAS__(2.5_TONS)_MILL_No.2"},{"code":"03-08-07","name":"FORK_LIFT_TOYOTA_DESEL__(4.5TONS)_W/H_No.6"},
+{"code":"03-08-08","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.1"},{"code":"03-08-09","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.2"},
+{"code":"03-08-10","name":"ELECTRIC_PEDESTRIAN_PALLET_TRUCK_No.3"},{"code":"03-08-27","name":"ELECTRIC_SCISSOR_LIFT_HAULOTTE"},
 {"code":"03-09-01","name":"A/C_LUWA_LABORATORY"},
-{"code":"03-10-01","name":"TRANSFORMER_-E1_"},
-{"code":"03-10-02","name":"TRANSFORMER_-W2"},
-{"code":"03-10-03","name":"TRANSFORMER_-W1A"},
-{"code":"03-10-04","name":"TRANSFORMER_-W1"},
-{"code":"03-10-05","name":"TRANSFORMER_-D1"},
-{"code":"03-10-06","name":"TRANSFORMER_-M"},
-{"code":"03-11-01","name":"MCC_SWITCH_BOARD-_E1__"},
-{"code":"03-11-02","name":"MCC_SWITCH_BOARD-_W2"},
-{"code":"03-11-03","name":"MCC_SWITCH_BOARD-_W1A"},
-{"code":"03-11-04","name":"MCC_SWITCH_BOARD-_W1"},
-{"code":"03-11-05","name":"MCC_SWITCH_BOARD-_D1"},
-{"code":"03-11-06","name":"MCC_SWITCH_BOARD-_M"},
-{"code":"03-13-01","name":"GOOD_LIFT_DIP_PREPE_"},
-{"code":"03-13-02","name":"MITSU__LIFT"},
-{"code":"03-14-01","name":"RING_MAIN_UNIT-E1_(Yearly)"},
-{"code":"03-14-02","name":"RING_MAIN_UNIT-W2_(Yearly)"},
-{"code":"03-14-03","name":"RING_MAIN_UNIT-W1A_(Yearly)"},
-{"code":"03-14-04","name":"RING_MAIN_UNIT-W1_(Yearly)"},
-{"code":"03-14-05","name":"RING_MAIN_UNIT-D1_(Yearly)"},
-{"code":"03-14-06","name":"RING_MAIN_UNIT-M_(Yearly)"},
-{"code":"03-15-01","name":"SWITCH_GEAR_INCOMMING_"},
-{"code":"03-15-02","name":"SWITCH_GEAR_RMU_W2_"},
-{"code":"03-15-03","name":"SWITCH_GEAR_RMU_E1_"},
-{"code":"03-15-04","name":"BATTERY_BACK_UP_110_V"},
-{"code":"03-16-01","name":"DOCK_LEVELLER_No.1_(Export)"},
-{"code":"03-16-02","name":"DOCK_LEVELLER_No.2_(Export_wind_up)"},
-{"code":"03-16-03","name":"DOCK_LEVELLER_No.3_(Export__ware_house)"},
-{"code":"03-16-04","name":"DOCK_LEVELLER_No.4_(Raw_matt_YE)"},
+{"code":"03-10-01","name":"TRANSFORMER_-E1_"},{"code":"03-10-02","name":"TRANSFORMER_-W2"},
+{"code":"03-10-03","name":"TRANSFORMER_-W1A"},{"code":"03-10-04","name":"TRANSFORMER_-W1"},
+{"code":"03-10-05","name":"TRANSFORMER_-D1"},{"code":"03-10-06","name":"TRANSFORMER_-M"},
+{"code":"03-11-01","name":"MCC_SWITCH_BOARD-_E1__"},{"code":"03-11-02","name":"MCC_SWITCH_BOARD-_W2"},
+{"code":"03-11-03","name":"MCC_SWITCH_BOARD-_W1A"},{"code":"03-11-04","name":"MCC_SWITCH_BOARD-_W1"},
+{"code":"03-11-05","name":"MCC_SWITCH_BOARD-_D1"},{"code":"03-11-06","name":"MCC_SWITCH_BOARD-_M"},
+{"code":"03-13-01","name":"GOOD_LIFT_DIP_PREPE_"},{"code":"03-13-02","name":"MITSU__LIFT"},
+{"code":"03-15-01","name":"SWITCH_GEAR_INCOMMING_"},{"code":"03-15-04","name":"BATTERY_BACK_UP_110_V"},
+{"code":"03-16-01","name":"DOCK_LEVELLER_No.1_(Export)"},{"code":"03-16-02","name":"DOCK_LEVELLER_No.2_(Export_wind_up)"},
+{"code":"03-16-03","name":"DOCK_LEVELLER_No.3_(Export__ware_house)"},{"code":"03-16-04","name":"DOCK_LEVELLER_No.4_(Raw_matt_YE)"},
 {"code":"03-16-05","name":"DOCK_LEVELLER_No.5_(Raw_matt_YW)"},
-{"code":"03-17-01","name":"AUTO_DOOR_No.01(Ditec_Smart_Plus_Raw_matt_In_door)"},
-{"code":"03-17-02","name":"AUTO_DOOR_No._02_(Rollway_Weaving)"},
-{"code":"03-17-03","name":"AUTO_DOOR_No._03_(Rollway_Weaving_&_G/F)"},
-{"code":"03-17-04","name":"AUTO_DOOR_No._04_(Monban_Raw_matt._out_door)"},
-{"code":"03-18-01","name":"PABX_TELEPHONE__SYSTEM"},
-{"code":"03-18-02","name":"PUBLIC__ENNOUNMENT"},
-{"code":"03-20-01","name":"CCTV_ADMIN_(PHASE_1_Graund_house_15_set)"},
-{"code":"03-20-02","name":"CCTV_ADMIN_(PHASE_2_Dip_unit_15_set)"},
-{"code":"03-20-03","name":"CCTV_ADMIN_(PHASE_3_Round_factory_15_set)"},
-{"code":"03-20-04","name":"CCTV_SYSTEM_(Mill&Weaving&Raw_matt._16set)"},
-{"code":"03-20-05","name":"CCTV_SYSTEM_(Utility_4set)"},
-{"code":"03-20-06","name":"CCTV_SYSTEM_(Dip_unit_PHASE_1/16_set)"},
-{"code":"03-20-07","name":"CCTV_SYSTEM_(Dip_unit_PHASE_2/16_set)"},
-{"code":"03-20-08","name":"CCTV_SYSTEM_(Dip_unit_PHASE_3/16_set)"},
-{"code":"03-20-09","name":"CCTV_SYSTEM(_Dip_unit_PHASE_4/8_set)"},
-{"code":"03-20-11","name":"CCTV_SYSTEM(_Lab_Chemical_8_set)"},
-{"code":"03-20-12","name":"CCTV_SYSTEM(_G/F_&_W/H_Uotgoing_14_Set_)"},
-{"code":"03-20-13","name":"CCTV_SYSTEM_(Admin_New_54_Set_)"},
-{"code":"03-19-01","name":"CHEMICAL_CABINET_No.1"},
-{"code":"03-19-02","name":"CHEMICAL_CABINET_No.2"},
-{"code":"03-21-01","name":"CUTTER_PRESS_No.1"},
-{"code":"03-22-01","name":"VACUUM_PUMP_No.6"},
-{"code":"03-22-02","name":"VACUUM_PUMP_No.7"},
-{"code":"03-22-03","name":"VACUUM_PUMP_No.8"},
-{"code":"03-22-04","name":"VACUUM_PUMP_No.9"},
-{"code":"03-23-01","name":"FUME_HOOD_No.1"},
-{"code":"03-24-01","name":"HYDRAULIC_CURING_PRESS_No.1"},
-{"code":"03-24-02","name":"HYDRAULIC_CURING_PRESS_No.2"},
+{"code":"03-17-01","name":"AUTO_DOOR_No.01(Ditec_Smart_Plus_Raw_matt_In_door)"},{"code":"03-17-02","name":"AUTO_DOOR_No._02_(Rollway_Weaving)"},
+{"code":"03-18-01","name":"PABX_TELEPHONE__SYSTEM"},{"code":"03-18-02","name":"PUBLIC__ENNOUNMENT"},
+{"code":"03-20-01","name":"CCTV_ADMIN_(PHASE_1_Graund_house_15_set)"},{"code":"03-20-04","name":"CCTV_SYSTEM_(Mill&Weaving&Raw_matt._16set)"},
+{"code":"03-21-01","name":"CUTTER_PRESS_No.1"},{"code":"03-22-01","name":"VACUUM_PUMP_No.6"},
+{"code":"03-22-02","name":"VACUUM_PUMP_No.7"},{"code":"03-22-03","name":"VACUUM_PUMP_No.8"},{"code":"03-22-04","name":"VACUUM_PUMP_No.9"},
+{"code":"03-24-01","name":"HYDRAULIC_CURING_PRESS_No.1"},{"code":"03-24-02","name":"HYDRAULIC_CURING_PRESS_No.2"},
 {"code":"03-24-03","name":"COMPRESSION_MACHINE_(CCM_01)"},
-{"code":"03-25-01","name":"WASTE_WATER_PUMP_No.1(Main_cooling_mill)"},
-{"code":"03-25-02","name":"WASTE_WATER_PUMP_No.2(softener)"},
+{"code":"03-25-01","name":"WASTE_WATER_PUMP_No.1(Main_cooling_mill)"},{"code":"03-25-02","name":"WASTE_WATER_PUMP_No.2(softener)"},
 {"code":"03-25-03","name":"WASTE_WATER_PUMP_No.3(Lab_chemical)"},
-{"code":"03-25-04","name":"SEWAGE_PIT_WATER_PUMP_No.4_Gate1_(w/h_export_)"},
-{"code":"03-25-05","name":"SEWAGE_PIT_WATER_PUMP_No.5Gate_2_(Locker_male_)"},
-{"code":"03-25-06","name":"SEWAGE_PIT_WATER_PUMP_No.6_Gate3_(guard_house)"},
 {"code":"03-12-01","name":"OFFICE_AIR_CONDITION_No.1"},{"code":"03-12-02","name":"OFFICE_AIR_CONDITION_No.2"},
 {"code":"03-12-03","name":"OFFICE_AIR_CONDITION_No.3"},{"code":"03-12-04","name":"OFFICE_AIR_CONDITION_No.4"},
-{"code":"03-12-05","name":"OFFICE_AIR_CONDITION_No.5"},{"code":"03-12-06","name":"OFFICE_AIR_CONDITION_No.6"},
-{"code":"03-12-07","name":"OFFICE_AIR_CONDITION_No.7"},{"code":"03-12-08","name":"OFFICE_AIR_CONDITION_No.8"},
-{"code":"03-12-09","name":"OFFICE_AIR_CONDITION_No.9"},{"code":"03-12-10","name":"OFFICE_AIR_CONDITION_No.10"},
-{"code":"03-12-11","name":"OFFICE_AIR_CONDITION_No.11"},{"code":"03-12-12","name":"OFFICE_AIR_CONDITION_No.12"},
-{"code":"03-12-13","name":"OFFICE_AIR_CONDITION_No.13"},{"code":"03-12-14","name":"OFFICE_AIR_CONDITION_No.14"},
-{"code":"03-12-15","name":"OFFICE_AIR_CONDITION_No.15"},{"code":"03-12-16","name":"OFFICE_AIR_CONDITION_No.16"},
-{"code":"03-12-17","name":"OFFICE_AIR_CONDITION_No.17"},{"code":"03-12-18","name":"OFFICE_AIR_CONDITION_No.18"},
-{"code":"03-12-19","name":"OFFICE_AIR_CONDITION_No.19"},{"code":"03-12-20","name":"OFFICE_AIR_CONDITION_No.20"},
-{"code":"03-12-21","name":"OFFICE_AIR_CONDITION_No.21"},{"code":"03-12-22","name":"OFFICE_AIR_CONDITION_No.22"},
-{"code":"03-12-23","name":"OFFICE_AIR_CONDITION_No.23"},{"code":"03-12-24","name":"OFFICE_AIR_CONDITION_No.24"},
-{"code":"03-12-25","name":"OFFICE_AIR_CONDITION_No.25"},{"code":"03-12-26","name":"OFFICE_AIR_CONDITION_No.26"},
-{"code":"03-12-27","name":"OFFICE_AIR_CONDITION_No.27"},{"code":"03-12-28","name":"OFFICE_AIR_CONDITION_No.28"},
-{"code":"03-12-29","name":"OFFICE_AIR_CONDITION_No.29"},{"code":"03-12-30","name":"OFFICE_AIR_CONDITION_No.30"},
-{"code":"03-12-31","name":"OFFICE_AIR_CONDITION_No.31"},{"code":"03-12-32","name":"OFFICE_AIR_CONDITION_No.32"},
-{"code":"03-12-33","name":"OFFICE_AIR_CONDITION_No.33"},{"code":"03-12-34","name":"OFFICE_AIR_CONDITION_No.34"},
-{"code":"03-12-35","name":"OFFICE_AIR_CONDITION_No.35"},{"code":"03-12-36","name":"OFFICE_AIR_CONDITION_No.36"},
-{"code":"03-12-37","name":"OFFICE_AIR_CONDITION_No.37"},{"code":"03-12-38","name":"OFFICE_AIR_CONDITION_No.38"},
-{"code":"03-12-39","name":"OFFICE_AIR_CONDITION_No.39"},{"code":"03-12-40","name":"OFFICE_AIR_CONDITION_No.40"},
-{"code":"03-12-41","name":"OFFICE_AIR_CONDITION_No.41"},{"code":"03-12-42","name":"OFFICE_AIR_CONDITION_No.42"},
-{"code":"03-12-43","name":"OFFICE_AIR_CONDITION_No.43"},{"code":"03-12-44","name":"OFFICE_AIR_CONDITION_No.44"},
-{"code":"03-12-45","name":"OFFICE_AIR_CONDITION_No.45"},{"code":"03-12-46","name":"OFFICE_AIR_CONDITION_No.46"},
-{"code":"03-12-47","name":"OFFICE_AIR_CONDITION_No.47"},{"code":"03-12-48","name":"OFFICE_AIR_CONDITION_No.48"},
-{"code":"03-12-49","name":"OFFICE_AIR_CONDITION_No.49"},{"code":"03-12-50","name":"OFFICE_AIR_CONDITION_No.50"},
-{"code":"03-12-51","name":"OFFICE_AIR_CONDITION_No.51"},{"code":"03-12-52","name":"OFFICE_AIR_CONDITION_No.52"},
-{"code":"03-12-53","name":"OFFICE_AIR_CONDITION_No.53"},{"code":"03-12-54","name":"OFFICE_AIR_CONDITION_No.54"},
-{"code":"03-12-55","name":"OFFICE_AIR_CONDITION_No.55"},{"code":"03-12-56","name":"OFFICE_AIR_CONDITION_No.56"},
-{"code":"03-12-57","name":"OFFICE_AIR_CONDITION_No.57"},{"code":"03-12-58","name":"OFFICE_AIR_CONDITION_No.58"},
-{"code":"03-12-59","name":"OFFICE_AIR_CONDITION_No.59"},{"code":"03-12-60","name":"OFFICE_AIR_CONDITION_No.60"},
-{"code":"03-12-61","name":"OFFICE_AIR_CONDITION_No.61"},{"code":"03-12-62","name":"OFFICE_AIR_CONDITION_No.62"},
-{"code":"03-12-63","name":"OFFICE_AIR_CONDITION_No.63"},{"code":"03-12-64","name":"OFFICE_AIR_CONDITION_No.64"},
-{"code":"03-12-65","name":"OFFICE_AIR_CONDITION_No.65"},{"code":"03-12-66","name":"OFFICE_AIR_CONDITION_No.66"},
-{"code":"03-12-67","name":"OFFICE_AIR_CONDITION_No.67"},{"code":"03-12-68","name":"OFFICE_AIR_CONDITION_No.68"},
-{"code":"03-12-69","name":"OFFICE_AIR_CONDITION_No.69"},{"code":"03-12-70","name":"OFFICE_AIR_CONDITION_No.70"},
-{"code":"03-12-71","name":"OFFICE_AIR_CONDITION_No.71"},{"code":"03-12-72","name":"OFFICE_AIR_CONDITION_No.72"},
-{"code":"03-12-73","name":"OFFICE_AIR_CONDITION_No.73"},{"code":"03-12-74","name":"OFFICE_AIR_CONDITION_No.74"},
-{"code":"03-12-75","name":"OFFICE_AIR_CONDITION_No.75"},{"code":"03-12-76","name":"OFFICE_AIR_CONDITION_No.76"},
-{"code":"03-12-77","name":"OFFICE_AIR_CONDITION_No.77"},{"code":"03-12-78","name":"OFFICE_AIR_CONDITION_No.78"},
-{"code":"03-12-79","name":"OFFICE_AIR_CONDITION_No.79"},{"code":"03-12-80","name":"OFFICE_AIR_CONDITION_No.80"},
-{"code":"03-12-81","name":"OFFICE_AIR_CONDITION_No.81"},{"code":"03-12-82","name":"OFFICE_AIR_CONDITION_No.82"},
-{"code":"03-12-83","name":"OFFICE_AIR_CONDITION_No.83"},{"code":"03-12-84","name":"OFFICE_AIR_CONDITION_No.84"}
+{"code":"03-12-05","name":"OFFICE_AIR_CONDITION_No.5"},{"code":"03-12-10","name":"OFFICE_AIR_CONDITION_No.10"},
+{"code":"03-12-20","name":"OFFICE_AIR_CONDITION_No.20"},{"code":"03-12-30","name":"OFFICE_AIR_CONDITION_No.30"},
+{"code":"03-12-40","name":"OFFICE_AIR_CONDITION_No.40"},{"code":"03-12-50","name":"OFFICE_AIR_CONDITION_No.50"},
+{"code":"03-12-60","name":"OFFICE_AIR_CONDITION_No.60"},{"code":"03-12-70","name":"OFFICE_AIR_CONDITION_No.70"},
+{"code":"03-12-80","name":"OFFICE_AIR_CONDITION_No.80"},{"code":"03-12-84","name":"OFFICE_AIR_CONDITION_No.84"}
 ];
 
-// ══════════════════════════════════════════
-// STATE
-// ══════════════════════════════════════════
 let data = [];
 
-// ══════════════════════════════════════════
-// JSONP helper — ใช้สำหรับทุก GAS call
-// ══════════════════════════════════════════
-function jsonpGet(params) {
-  return new Promise((resolve, reject) => {
-    const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*99999);
-    const script = document.createElement("script");
-    const timer  = setTimeout(() => {
-      delete window[cbName]; script.remove();
-      reject(new Error("GAS timeout"));
-    }, 25000);
-    window[cbName] = function(res) {
-      clearTimeout(timer); delete window[cbName]; script.remove();
-      resolve(res);
-    };
-    script.onerror = () => {
-      clearTimeout(timer); delete window[cbName]; script.remove();
-      reject(new Error("Script load error"));
-    };
-    const qs = Object.entries({...params, callback: cbName})
-      .map(([k,v]) => k + "=" + encodeURIComponent(v)).join("&");
-    script.src = GAS_URL + "?" + qs;
-    document.body.appendChild(script);
-  });
-}
-
-// ══════════════════════════════════════════
-// RESIZE — เล็กพอสำหรับ JSONP URL
-// ══════════════════════════════════════════
-function resizeForUpload(file, maxW=400, quality=0.5) {
-  return new Promise(resolve => {
-    if (!file) { resolve(""); return; }
-    const img = new Image(), reader = new FileReader();
-    reader.onload = e => { img.src = e.target.result; };
-    img.onload = () => {
-      const scale = Math.min(1, maxW / img.width);
-      const c = document.createElement("canvas");
-      c.width  = Math.round(img.width  * scale);
-      c.height = Math.round(img.height * scale);
-      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-      const b64 = c.toDataURL("image/jpeg", quality);
-      console.log("🖼 " + file.name + " → " + c.width + "x" + c.height + " " + Math.round(b64.length/1024) + "KB");
-      resolve(b64);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// ══════════════════════════════════════════
-// PROGRESS
-// ══════════════════════════════════════════
 function setProgress(pct, label) {
   document.getElementById("progressWrap").style.display = "block";
   document.getElementById("progressBar").style.width = pct + "%";
@@ -479,9 +197,65 @@ function hideProgress() {
   document.getElementById("progressBar").style.width = "0%";
 }
 
-// ══════════════════════════════════════════
-// VALIDATE
-// ══════════════════════════════════════════
+function resizeImage(file, maxW=800, quality=0.7) {
+  return new Promise(resolve => {
+    if (!file) { resolve(""); return; }
+    const img = new Image(), reader = new FileReader();
+    reader.onload = e => { img.src = e.target.result; };
+    img.onload = () => {
+      const scale = Math.min(1, maxW / img.width);
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.width * scale);
+      c.height = Math.round(img.height * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      resolve(c.toDataURL("image/jpeg", quality));
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ImgBB รองรับ CORS ทำให้ fetch ได้จาก GitHub Pages
+async function uploadToImgBB(file) {
+  if (!file) return "";
+  try {
+    const b64 = await resizeImage(file);
+    const form = new FormData();
+    form.append("key", IMGBB_KEY);
+    form.append("image", b64.split(",")[1]);
+    const res  = await fetch("https://api.imgbb.com/1/upload", { method:"POST", body:form });
+    const json = await res.json();
+    const url  = json.data?.url || "";
+    console.log("✅ ImgBB uploaded:", url);
+    return url;
+  } catch(e) {
+    console.error("❌ ImgBB failed:", e);
+    return "";
+  }
+}
+
+function jsonpGet(params) {
+  return new Promise((resolve, reject) => {
+    const cbName = "cb_" + Date.now() + "_" + Math.floor(Math.random()*99999);
+    const script = document.createElement("script");
+    const timer = setTimeout(() => {
+      delete window[cbName]; script.remove();
+      reject(new Error("GAS timeout"));
+    }, 20000);
+    window[cbName] = function(res) {
+      clearTimeout(timer); delete window[cbName]; script.remove();
+      resolve(res);
+    };
+    script.onerror = () => {
+      clearTimeout(timer); delete window[cbName]; script.remove();
+      reject(new Error("Script error"));
+    };
+    const qs = Object.entries({...params, callback: cbName})
+      .map(([k,v]) => k + "=" + encodeURIComponent(v)).join("&");
+    script.src = GAS_URL + "?" + qs;
+    document.body.appendChild(script);
+  });
+}
+
 function validateForm() {
   const ids = ["machineCode","machineName","date","sym","tstop","tstart","tfin",
                "req","acc","cause","act","datef","owner","deliver"];
@@ -494,23 +268,24 @@ function validateForm() {
   return ok;
 }
 
-// ══════════════════════════════════════════
-// SAVE
-// ══════════════════════════════════════════
 async function save() {
   if (!validateForm()) { alert("กรุณากรอกข้อมูลให้ครบ"); return; }
   const btn = document.querySelector(".btn");
   btn.disabled = true;
-
   try {
-    // Step 1 — resize รูป
-    setProgress(10, "📷 เตรียมรูปภาพ...");
+    // อัปโหลดรูปไป ImgBB → ได้ URL กลับมา
     const files = ["img1","img2","img3"].map(id => document.getElementById(id).files[0]);
-    const b64s  = await Promise.all(files.map(f => resizeForUpload(f)));
+    const urls = [];
+    for (let i = 0; i < 3; i++) {
+      if (files[i]) {
+        setProgress(10 + i*20, "📷 อัปโหลดรูป " + (i+1) + "/3...");
+        urls.push(await uploadToImgBB(files[i]));
+      } else { urls.push(""); }
+    }
 
-    // Step 2 — save text
-    setProgress(30, "💾 บันทึกข้อมูล...");
-    const textData = {
+    // ส่งข้อมูล + URL รูป ไป GAS ผ่าน JSONP
+    setProgress(75, "💾 บันทึกข้อมูล...");
+    const payload = {
       code:    document.getElementById("machineCode").value,
       name:    document.getElementById("machineName").value,
       date:    document.getElementById("date").value,
@@ -525,40 +300,21 @@ async function save() {
       tfin:    document.getElementById("tfin").value,
       deliver: document.getElementById("deliver").value,
       owner:   document.getElementById("owner").value,
-      parts:   getParts()
+      parts:   getParts(),
+      image1:  urls[0], image2: urls[1], image3: urls[2]
     };
 
-    const r1 = await jsonpGet({ action: "saveText", data: JSON.stringify(textData) });
-    console.log("📩 saveText:", r1);
-    if (!r1 || r1.status !== "ok") throw new Error("saveText failed: " + JSON.stringify(r1));
-    const rowIndex = r1.rowIndex;
+    const result = await jsonpGet({ action:"save", data: JSON.stringify(payload) });
+    console.log("📩 GAS:", result);
+    if (!result || result.status !== "ok") throw new Error("GAS: " + JSON.stringify(result));
 
-    // Step 3 — ส่งรูปทีละรูปผ่าน JSONP
-    const keys = ["image1","image2","image3"];
-    for (let i = 0; i < 3; i++) {
-      if (!b64s[i]) continue;
-      setProgress(50 + i*15, "🖼 อัปโหลดรูป " + (i+1) + "/3...");
-      try {
-        const r = await jsonpGet({ action:"saveImage", rowIndex:rowIndex, key:keys[i], base64:b64s[i] });
-        console.log("📩 " + keys[i] + ":", r);
-      } catch(e) {
-        // ลอง compress เพิ่มถ้า URL ใหญ่เกิน
-        console.warn("⚠️ retry smaller " + keys[i]);
-        try {
-          const small = await resizeForUpload(files[i], 300, 0.35);
-          await jsonpGet({ action:"saveImage", rowIndex:rowIndex, key:keys[i], base64:small });
-        } catch(e2) { console.error("❌ " + keys[i] + " failed:", e2.message); }
-      }
-    }
-
-    setProgress(100, "✅ เสร็จสมบูรณ์!");
+    setProgress(100, "✅ บันทึกสำเร็จ!");
     setTimeout(() => {
       hideProgress();
       alert("✅ บันทึกสำเร็จ!");
       resetForm();
-      setTimeout(() => loadFromSheet(), 5000);
+      setTimeout(() => loadFromSheet(), 3000);
     }, 600);
-
   } catch(err) {
     hideProgress();
     alert("❌ " + err.message);
@@ -569,18 +325,15 @@ async function save() {
   }
 }
 
-// ══════════════════════════════════════════
-// LOAD / RENDER
-// ══════════════════════════════════════════
 function loadFromSheet() {
   window.handleData = function(res) {
-    data = (res||[]).map(row => ({
-      code:row.code||"", name:row.name||"", date:row.date||"",
-      sym:row.sym||"", tstop:row.tstop||"", tstart:row.tstart||"",
-      req:row.req||"", acc:row.acc||"", cause:row.cause||"", act:row.act||"",
-      datef:row.datef||"", tfin:row.tfin||"", deliver:row.deliver||"", owner:row.owner||"",
-      partCode:row.partCode||"", partName:row.partName||"", qty:row.qty||"",
-      image1:row.image1||"", image2:row.image2||"", image3:row.image3||""
+    data = (res||[]).map(r => ({
+      code:r.code||"", name:r.name||"", date:r.date||"",
+      sym:r.sym||"", tstop:r.tstop||"", tstart:r.tstart||"",
+      req:r.req||"", acc:r.acc||"", cause:r.cause||"", act:r.act||"",
+      datef:r.datef||"", tfin:r.tfin||"", deliver:r.deliver||"", owner:r.owner||"",
+      partCode:r.partCode||"", partName:r.partName||"", qty:r.qty||"",
+      image1:r.image1||"", image2:r.image2||"", image3:r.image3||""
     }));
     render();
   };
@@ -594,8 +347,7 @@ function getFilteredData() {
   const m = document.getElementById("filterMachine")?.value||"";
   return data.filter(d =>
     (d.code+d.name+d.sym+d.req+d.acc+d.cause+d.act).toLowerCase().includes(q) &&
-    (m ? d.code===m : true)
-  );
+    (m ? d.code===m : true));
 }
 
 function render() {
@@ -618,61 +370,53 @@ function render() {
 
 function del(i) { data.splice(i,1); render(); }
 
-// ══════════════════════════════════════════
-// UI HELPERS
-// ══════════════════════════════════════════
-function switchTab(t, el) {
+function switchTab(t,el) {
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(t).classList.add('active');
-  if (t==='history') render();
+  el.classList.add('active'); document.getElementById(t).classList.add('active');
+  if(t==='history') render();
 }
 function searchMachine(val) {
-  const dd = document.getElementById("dropdown");
-  if (!val) { dd.style.display="none"; return; }
-  const q = val.toLowerCase();
-  const res = MACHINES.filter(m=>m.name.toLowerCase().includes(q)||m.code.includes(q));
-  dd.innerHTML = res.map(m=>`<div onclick="selectMachine('${m.name}','${m.code}')"><b>${m.name}</b><br><small style="color:#666">${m.code}</small></div>`).join('');
-  dd.style.display = res.length?"block":"none";
+  const dd=document.getElementById("dropdown");
+  if(!val){dd.style.display="none";return;}
+  const q=val.toLowerCase();
+  const res=MACHINES.filter(m=>m.name.toLowerCase().includes(q)||m.code.includes(q));
+  dd.innerHTML=res.map(m=>`<div onclick="selectMachine('${m.name}','${m.code}')"><b>${m.name}</b><br><small style="color:#666">${m.code}</small></div>`).join('');
+  dd.style.display=res.length?"block":"none";
 }
 function selectMachine(n,c) {
-  document.getElementById("machineInput").value = n;
-  document.getElementById("machineCode").value  = c;
-  document.getElementById("machineName").value  = n;
-  document.getElementById("dropdown").style.display = "none";
+  document.getElementById("machineInput").value=n;
+  document.getElementById("machineCode").value=c;
+  document.getElementById("machineName").value=n;
+  document.getElementById("dropdown").style.display="none";
 }
-function togglePart() {
-  document.getElementById("partsBox").style.display = document.getElementById("hasPart").checked?"block":"none";
-}
-function addPart() {
-  const row = document.createElement("div");
-  row.className = "part-row";
-  row.innerHTML = `<div class="row1"><input placeholder="Code"><input type="number" value="1"><button onclick="this.parentElement.parentElement.remove()">X</button></div><div class="row2"><input placeholder="Name"></div>`;
+function togglePart(){document.getElementById("partsBox").style.display=document.getElementById("hasPart").checked?"block":"none";}
+function addPart(){
+  const row=document.createElement("div"); row.className="part-row";
+  row.innerHTML=`<div class="row1"><input placeholder="Code"><input type="number" value="1"><button onclick="this.parentElement.parentElement.remove()">X</button></div><div class="row2"><input placeholder="Name"></div>`;
   document.getElementById("parts").appendChild(row);
 }
-function getParts() {
+function getParts(){
   return [...document.querySelectorAll(".part-row")].map(r=>({
-    code: r.querySelectorAll(".row1 input")[0].value,
-    qty:  r.querySelectorAll(".row1 input")[1].value,
-    name: r.querySelector(".row2 input").value
+    code:r.querySelectorAll(".row1 input")[0].value,
+    qty:r.querySelectorAll(".row1 input")[1].value,
+    name:r.querySelector(".row2 input").value
   }));
 }
-function loadUsers() {
-  const opts = USERS.map(u=>`<option value="${u}">${u}</option>`).join("");
+function loadUsers(){
+  const opts=USERS.map(u=>`<option value="${u}">${u}</option>`).join("");
   ["req","acc","deliver","owner"].forEach(id=>document.getElementById(id).innerHTML=opts);
 }
-function loadMachineFilter() {
-  document.getElementById("filterMachine").innerHTML =
-    `<option value="">📊 ทุกเครื่องจักร</option>` +
+function loadMachineFilter(){
+  document.getElementById("filterMachine").innerHTML=`<option value="">📊 ทุกเครื่องจักร</option>`+
     [...new Set(MACHINES.map(m=>m.code))].map(c=>`<option value="${c}">${c}</option>`).join("");
 }
-function formatDate(d) {
-  if (!d) return "";
-  const o = new Date(d);
-  return ("0"+o.getDate()).slice(-2)+"/"+("0"+(o.getMonth()+1)).slice(-2)+"/"+o.getFullYear();
+function formatDate(d){
+  if(!d)return"";
+  const o=new Date(d);
+  return("0"+o.getDate()).slice(-2)+"/"+("0"+(o.getMonth()+1)).slice(-2)+"/"+o.getFullYear();
 }
-function resetForm() {
+function resetForm(){
   ["machineInput","machineCode","machineName","date","sym","tstop","tstart","cause","act","datef","tfin"]
     .forEach(id=>document.getElementById(id).value="");
   ["img1","img2","img3"].forEach(id=>document.getElementById(id).value="");
@@ -681,24 +425,17 @@ function resetForm() {
   document.getElementById("partsBox").style.display="none";
   ["req","acc","deliver","owner"].forEach(id=>document.getElementById(id).selectedIndex=0);
 }
-function exportExcel() {
-  const ws = XLSX.utils.json_to_sheet(data.map(d=>({
-    "CODE":d.code,"NAME":d.name,"DATE":d.date,"SYMPTOM":d.sym,
-    "STOP":d.tstop,"START":d.tstart,"REQ":d.req,"ACC":d.acc,
+function exportExcel(){
+  const ws=XLSX.utils.json_to_sheet(data.map(d=>({"CODE":d.code,"NAME":d.name,"DATE":d.date,
+    "SYMPTOM":d.sym,"STOP":d.tstop,"START":d.tstart,"REQ":d.req,"ACC":d.acc,
     "CAUSE":d.cause,"ACTION":d.act,"FINISH DATE":d.datef,"FINISH TIME":d.tfin,
-    "DELIVER":d.deliver,"OWNER":d.owner,
-    "PART CODE":d.partCode,"PART NAME":d.partName,"QTY":d.qty
-  })));
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "History");
-  XLSX.writeFile(wb, "maintenance.xlsx");
+    "DELIVER":d.deliver,"OWNER":d.owner,"PART CODE":d.partCode,"PART NAME":d.partName,"QTY":d.qty})));
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"History");
+  XLSX.writeFile(wb,"maintenance.xlsx");
 }
 
-window.onload = function() {
-  loadUsers();
-  loadFromSheet();
-  loadMachineFilter();
-};
+window.onload=function(){loadUsers();loadFromSheet();loadMachineFilter();};
 </script>
 </body>
 </html>
