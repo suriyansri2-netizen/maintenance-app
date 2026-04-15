@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App 555</title>
+<title>Maintenance UT TIK App</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -882,61 +882,35 @@ function render(){
 
   tbody.innerHTML = list.map((d,i)=>{
 
-    // ✅ SHIFT INDEX เพราะ col0 = timestamp
-    let timestamp = d[0]; // ไม่ใช้ แต่เก็บไว้ได้
-    let code      = d[1];
-    let name      = d[2];
-    let date      = d[3];
-    let sym       = d[4];
-    let tstop     = d[5];
-    let tstart    = d[6];
-    let req       = d[7];
-    let acc       = d[8];
-    let cause     = d[9];
-    let act       = d[10];
-    let datef     = d[11];
-    let tfin      = d[12];
-    let deliver   = d[13];
-    let owner     = d[14];
-    let partCode  = d[15];
-    let partName  = d[16];
-    let qty       = d[17];
-    let image     = d[18];
-
-    partCode = (partCode || "").toString().replaceAll("|", "<br>");
-    partName = (partName || "").toString().replaceAll("|", "<br>");
-    qty      = (qty || "").toString().replaceAll("|", "<br>");
-
     return `
     <tr>
-      <td>${code}</td>
-      <td>${name}</td>
-      <td>${formatDate(date)}</td>
-      <td>${sym}</td>
-      <td>${tstop}</td>
-      <td>${tstart}</td>
-      <td>${req}</td>
-      <td>${acc}</td>
-      <td>${cause}</td>
-      <td>${act}</td>
-      <td>${formatDate(datef)}</td>
-      <td>${tfin}</td>
-      <td>${deliver}</td>
-      <td>${owner}</td>
-      <td>${partCode}</td>
-      <td>${partName}</td>
-      <td>${qty}</td>
+      <td>${d.code || ""}</td>
+      <td>${d.name || ""}</td>
+      <td>${formatDate(d.date)}</td>
+      <td>${d.sym || ""}</td>
+      <td>${d.tstop || ""}</td>
+      <td>${d.tstart || ""}</td>
+      <td>${d.req || ""}</td>
+      <td>${d.acc || ""}</td>
+      <td>${d.cause || ""}</td>
+      <td>${d.act || ""}</td>
+      <td>${formatDate(d.datef)}</td>
+      <td>${d.tfin || ""}</td>
+      <td>${d.deliver || ""}</td>
+      <td>${d.owner || ""}</td>
+
+      <td>${(d.partCode || "").replaceAll("|","<br>")}</td>
+      <td>${(d.partName || "").replaceAll("|","<br>")}</td>
+      <td>${(d.qty || "").replaceAll("|","<br>")}</td>
 
       <td>
-        ${image ? `
-          <a href="${image}" target="_blank">
-            <img src="${image}" style="width:60px;border-radius:6px;transition:0.2s">
+        ${d.image ? `
+          <a href="${d.image}" target="_blank">
+            <img src="${d.image}" style="width:60px;border-radius:6px">
           </a>` : ""}
       </td>
 
-      <td>
-        <button class="small-btn del" onclick="del(${i})">X</button>
-      </td>
+      <td><button class="small-btn del" onclick="del(${i})">X</button></td>
     </tr>
     `;
   }).join("");
