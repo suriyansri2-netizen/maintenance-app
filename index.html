@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App 55 </title>
+<title>Maintenance UT TIK App  </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -812,52 +812,100 @@ return ok;
   
 /* SAVE */
 async function save() {
-
-  if(!validateForm()){
+  if (!validateForm()) {
     alert("กรุณากรอกข้อมูลให้ครบ");
     return;
   }
 
-  const imgFiles = [img1.files[0], img2.files[0], img3.files[0]];
+  // แสดง loading
+  const btn = document.querySelector(".btn");
+  btn.textContent = "กำลังบันทึก...";
+  btn.disabled = true;
 
-  const images = await Promise.all(
-    imgFiles.map(f => f ? resizeImage(f) : null) // 🔥 ใช้ resize ดีกว่า
-  );
+  try {
+    const imgFiles = [img1.files[0], img2.files[0], img3.files[0]];
+    const images = await Promise.all(
+      imgFiles.map(f => f ? resizeImage(f) : Promise.resolve(null))
+    );
 
-  const payload = {
-    code: machineCode.value,
-    name: machineName.value,
-    date: date.value,
-    sym: sym.value,
-    tstop: tstop.value,
-    tstart: tstart.value,
-    req: req.value,
-    acc: acc.value,
-    cause: cause.value,
-    act: act.value,
-    datef: datef.value,
-    tfin: tfin.value,
-    deliver: deliver.value,
-    owner: owner.value,
-    parts: getParts(),
+    const payload = {
+      code:    machineCode.value,
+      name:    machineName.value,
+      date:    date.value,
+      sym:     sym.value,
+      tstop:   tstop.value,
+      tstart:  tstart.value,
+      req:     req.value,
+      acc:     acc.value,
+      cause:   cause.value,
+      act:     act.value,
+      datef:   datef.value,
+      tfin:    tfin.value,
+      deliver: deliver.value,
+      owner:   owner.value,
+      parts:   getParts(),
+      image1:  images[0] || "",
+      image2:  images[1] || "",
+      image3:  images[2] || ""
+    };
 
-    image1: images[0],
-    image2: images[1],
-    image3: images[2]
-  };
+    const url = "https://script.google.com/macros/s/AKfycby8qXWWvERtdjJzANShR3etSq41mGu70UpNrIN44yuFfLPiJNmEFqcSvXjpOAGrA0R3FA/exec";
 
-const url = "https://script.google.com/macros/s/AKfycby8qXWWvERtdjJzANShR3etSq41mGu70UpNrIN44yuFfLPiJNmEFqcSvXjpOAGrA0R3FA/exec";
+    // 🔥 ใช้ fetch POST แทน script tag (รองรับข้อมูลใหญ่)
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
 
-const script = document.createElement("script");
+    alert("✅ บันทึกสำเร็จ");
+    resetForm();
+    loadFromSheet(); // refresh history
 
-script.src =
-  url +
-  "?action=save&data=" +
-  encodeURIComponent(JSON.stringify(payload));
+  } catch (err) {
+    alert("❌ เกิดข้อผิดพลาด: " + err.message);
+  } finally {
+    btn.textContent = "SAVE";
+    btn.disabled = false;
+  }
+}
 
-document.body.appendChild(script);
+  // function resetForm() 
+function resetForm() {
+  machineInput.value = "";
+  machineCode.value = "";
+  machineName.value = "";
+  date.value = "";
+  sym.value = "";
+  tstop.value = "";
+  tstart.value = "";
+  cause.value = "";
+  act.value = "";
+  datef.value = "";
+  tfin.value = "";
+  img1.value = "";
+  img2.value = "";
+  img3.value = "";
+  hasPart.checked = false;
+  document.getElementById("parts").innerHTML = "";
+  partsBox.style.display = "none";
+}
 
-alert("บันทึกสำเร็จ");
+//   function getFilteredData
+
+  function getFilteredData(){
+let q = document.getElementById("searchHistory")?.value?.toLowerCase() || "";
+let m = document.getElementById("filterMachine")?.value || "";
+
+return data.filter(d=>{
+let matchSearch =
+(d.code+d.name+d.sym+d.req+d.acc+d.cause+d.act)
+.toLowerCase()
+.includes(q);
+
+let matchMachine = m ? d.code === m : true;
+
+return matchSearch && matchMachine;
+});
 }
   
 /* RENDER */
