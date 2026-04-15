@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App</title>
+<title>Maintenance UT TIK App 555 </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -818,14 +818,10 @@ async function save() {
     return;
   }
 
-  const imgFiles = [
-    img1.files[0],
-    img2.files[0],
-    img3.files[0]
-  ];
+  const imgFiles = [img1.files[0], img2.files[0], img3.files[0]];
 
   const images = await Promise.all(
-    imgFiles.map(f => f ? toBase64(f) : null)
+    imgFiles.map(f => f ? resizeImage(f) : null) // 🔥 ใช้ resize ดีกว่า
   );
 
   const payload = {
@@ -850,26 +846,19 @@ async function save() {
     image3: images[2]
   };
 
-  google.script.run
-    .withSuccessHandler(() => alert("บันทึกสำเร็จ"))
-    .withFailureHandler(err => alert(err.message))
-    .uploadData(payload);
-}
+  const res = await fetch("https://script.google.com/macros/s/AKfycbyIbolQhq7RTKiPKdvDKaRHFNypymqKPN2hQlvTrITRq5SQWDmBJzZj1Px0YjhzpcLpow/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
 
-function getFilteredData(){
-let q = document.getElementById("searchHistory")?.value?.toLowerCase() || "";
-let m = document.getElementById("filterMachine")?.value || "";
+  const result = await res.json();
 
-return data.filter(d=>{
-let matchSearch =
-(d.code+d.name+d.sym+d.req+d.acc+d.cause+d.act)
-.toLowerCase()
-.includes(q);
-
-let matchMachine = m ? d.code === m : true;
-
-return matchSearch && matchMachine;
-});
+  if(result.status === "ok"){
+    alert("บันทึกสำเร็จ");
+  } else {
+    alert(result.message);
+  }
 }
   
 /* RENDER */
