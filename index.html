@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App 555</title>
+<title>Maintenance UT TIK App</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -816,10 +816,18 @@ function save(){
     return;
   }
 
+   let parts = getParts();
+
+  let partCode = parts.map(p => p.code).join(" | ");
+  let partName = parts.map(p => p.name).join(" | ");
+  let qty      = parts.map(p => p.qty).join(" | ");
+
+
   const file = document.getElementById("img").files[0];
 
   const formData = new FormData();
 
+ 
   formData.append("file", file);
 
   formData.append("code", machineCode.value);
