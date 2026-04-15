@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App </title>
+<title>Maintenance UT TIK App 555</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -231,6 +231,11 @@ th:nth-child(10), td:nth-child(10){min-width:220px;} /* การแก้ไข
   box-shadow: 0 0 0 3px rgba(79,70,229,0.15);
 }
 
+
+img {
+  transition: transform 0.2s ease;
+}
+  
   
 </style>
 
@@ -282,8 +287,17 @@ th:nth-child(10), td:nth-child(10){min-width:220px;} /* การแก้ไข
 <div class="fg"><label>ผู้ส่งเครื่อง</label><select id="deliver"></select></div>
 <div class="fg"><label>ผู้รับเครื่อง</label><select id="owner"></select></div>
 
+<div class="fg full">
+  <label>รูปภาพ</label>
+  <input type="file" id="img" accept="image/*" capture="environment">
+</div>
+  
+
 
 <div class="fg full">
+
+
+  
 <label><input type="checkbox" id="hasPart" onchange="togglePart()"> มีการเปลี่ยนอะไหล่</label>
 </div>
   
@@ -332,6 +346,7 @@ th:nth-child(10), td:nth-child(10){min-width:220px;} /* การแก้ไข
   <th>รหัสอะไหล่</th>
   <th>ชื่ออะไหล่</th>
   <th>จำนวน</th>
+  <th>รูป</th>
   <th>ลบ</th>
 </tr>
 </thead>
@@ -796,70 +811,41 @@ return ok;
 /* SAVE */
 function save(){
 
-  
-if(!validateForm()){
-alert("กรุณากรอกข้อมูลให้ครบ");
-return;
-}
- 
-let parts = getParts();
+  if(!validateForm()){
+    alert("กรุณากรอกข้อมูลให้ครบ");
+    return;
+  }
 
-let partCode = parts.map(p => p.code).join(" | ");
-let qty      = parts.map(p => p.qty).join(" | ");
-let partName = parts.map(p => p.name).join(" | ");
+  const file = document.getElementById("img").files[0];
 
+  const formData = new FormData();
 
+  formData.append("file", file);
 
-fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
-  method: "POST",
-  body: JSON.stringify({
-    code: machineCode.value,
-    name: machineName.value,
-    date: date.value,
-    sym: sym.value,
-    tstop: tstop.value,
-    tstart: tstart.value,
-    req: req.value,
-    acc: acc.value,
-    cause: cause.value,
-    act: act.value,
-    datef: datef.value,
-    tfin: tfin.value,
-    deliver: deliver.value,
-    owner: owner.value,
-    partCode,
-    partName,
-    qty
-  })
-});
+  formData.append("code", machineCode.value);
+  formData.append("name", machineName.value);
+  formData.append("date", date.value);
+  formData.append("sym", sym.value);
+  formData.append("tstop", tstop.value);
+  formData.append("tstart", tstart.value);
+  formData.append("req", req.value);
+  formData.append("acc", acc.value);
+  formData.append("cause", cause.value);
+  formData.append("act", act.value);
+  formData.append("datef", datef.value);
+  formData.append("tfin", tfin.value);
+  formData.append("deliver", deliver.value);
+  formData.append("owner", owner.value);
+  formData.append("partCode", partCode);
+  formData.append("partName", partName);
+  formData.append("qty", qty);
 
+  fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
+    method: "POST",
+    body: formData
+  });
 
-
-data.unshift({
-  code:machineCode.value,
-  name:machineName.value,
-  date:date.value,
-  sym:sym.value,
-  tstop: formatTime(tstop.value),
-  tstart: formatTime(tstart.value),
-  tfin: formatTime(tfin.value),
-  req:req.value,
-  acc:acc.value,
-  cause:cause.value,
-  act:act.value,
-  deliver:deliver.value,
-  datef:datef.value,
-  owner:owner.value,
-  partCode,
-  partName,
-  qty
-});
-
-localStorage.setItem("maintData", JSON.stringify(data));
- 
-  
-alert("บันทึกข้อมูลสำเร็จ");
-render();
+  alert("บันทึกแล้ว");
 }
 
 
@@ -912,7 +898,17 @@ return `
 <td>${partName}</td>
 <td>${partQty}</td>
 
+<td>
+  ${d.image ? `<a href="${d.image}" target="_blank">
+    <img src="${d.image}" style="width:60px;border-radius:6px">
+  </a>` : ""}
+</td>
+
 <td><button class="small-btn del" onclick="del(${i})">X</button></td>
+
+
+
+                 
 </tr>
 `;
 }).join("");
