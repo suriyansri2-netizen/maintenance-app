@@ -739,6 +739,9 @@ let qty      = parts.map(p => p.qty).join(" | ");
 
 fetch("https://script.google.com/macros/s/AKfycbxAg_9Zf4YXegAdCwQjm9TcDQ9PeOn1PKPOHoQRT0vJWP_6GOhfWUKDZTTva9BoEek0MQ/exec", {
   method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
   body: JSON.stringify({
     code: machineCode.value,
     name: machineName.value,
@@ -758,7 +761,7 @@ fetch("https://script.google.com/macros/s/AKfycbxAg_9Zf4YXegAdCwQjm9TcDQ9PeOn1PK
     partName,
     qty
   })
-})
+});
 
 data.unshift({
   code:machineCode.value,
