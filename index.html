@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App  </title>
+<title>Maintenance UT TIK App  555</title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -288,10 +288,12 @@ img {
 <div class="fg"><label>ผู้รับเครื่อง</label><select id="owner"></select></div>
 
 <div class="fg full">
-  <label>รูปภาพ</label>
-  <input type="file" id="img" accept="image/*" capture="environment">
+  <label>รูปภาพ (สูงสุด 3 รูป)</label>
+
+  <input type="file" id="img1" accept="image/*" capture="environment">
+  <input type="file" id="img2" accept="image/*" capture="environment">
+  <input type="file" id="img3" accept="image/*" capture="environment">
 </div>
-  
 
 
 <div class="fg full">
@@ -822,13 +824,16 @@ function save(){
   let partName = parts.map(p => p.name).join(" | ");
   let qty      = parts.map(p => p.qty).join(" | ");
 
+    const formData = new FormData();
 
-  const file = document.getElementById("img").files[0];
+const file1 = document.getElementById("img1").files[0];
+const file2 = document.getElementById("img2").files[0];
+const file3 = document.getElementById("img3").files[0];
 
-  const formData = new FormData();
-
+if (file1) formData.append("image1", file1);
+if (file2) formData.append("image2", file2);
+if (file3) formData.append("image3", file3);
  
-  formData.append("file", file);
 
   formData.append("code", machineCode.value);
   formData.append("name", machineName.value);
@@ -903,14 +908,15 @@ function render(){
       <td>${d.partName || ""}</td>
       <td>${d.qty || ""}</td>
 
-      <td>
-        ${d.image
-          ? `<a href="${d.image}" target="_blank">
-              <img src="${d.image}" style="width:60px;border-radius:6px">
-            </a>`
-          : ""
-        }
-      </td>
+    <td>
+  ${(d.image1 || d.image2 || d.image3) ? `
+    <div style="display:flex;gap:4px">
+      ${d.image1 ? `<a href="${d.image1}" target="_blank"><img src="${d.image1}" style="width:40px;border-radius:6px"></a>` : ""}
+      ${d.image2 ? `<a href="${d.image2}" target="_blank"><img src="${d.image2}" style="width:40px;border-radius:6px"></a>` : ""}
+      ${d.image3 ? `<a href="${d.image3}" target="_blank"><img src="${d.image3}" style="width:40px;border-radius:6px"></a>` : ""}
+    </div>
+  ` : ""}
+</td>
 
       <td><button class="small-btn del" onclick="del(${i})">X</button></td>
 
