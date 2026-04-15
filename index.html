@@ -797,8 +797,9 @@ return;
 let parts = getParts();
 
 let partCode = parts.map(p => p.code).join(" | ");
-let partName = parts.map(p => p.name).join(" | ");
 let qty      = parts.map(p => p.qty).join(" | ");
+let partName = parts.map(p => p.name).join(" | ");
+
 
 
 fetch("https://script.google.com/macros/s/AKfycbzGOVnZZLb8UOiAJO1UZxelABF3XlPpqM3JqnL4u9ggEhFDchCz2UmpCMK32UEFgQa7xw/exec", {
@@ -900,8 +901,9 @@ return `
 <td>${d.deliver}</td>
 <td>${d.owner}</td>
 <td>${partCode}</td>
-<td>${partName}</td>
 <td>${partQty}</td>
+<td>${partName}</td>
+
 <td><button class="small-btn del" onclick="del(${i})">X</button></td>
 </tr>
 `;
