@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maintenance UT TIK App   </title>
+<title>Maintenance UT TIK App 55  </title>
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
@@ -739,9 +739,6 @@ let qty      = parts.map(p => p.qty).join(" | ");
 
 fetch("https://script.google.com/macros/s/AKfycbxAg_9Zf4YXegAdCwQjm9TcDQ9PeOn1PKPOHoQRT0vJWP_6GOhfWUKDZTTva9BoEek0MQ/exec", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
   body: JSON.stringify({
     code: machineCode.value,
     name: machineName.value,
@@ -762,6 +759,8 @@ fetch("https://script.google.com/macros/s/AKfycbxAg_9Zf4YXegAdCwQjm9TcDQ9PeOn1PK
     qty
   })
 });
+
+
 
 data.unshift({
   code:machineCode.value,
